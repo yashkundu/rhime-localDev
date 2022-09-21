@@ -1,0 +1,42 @@
+import { Document, Collection } from "mongodb";
+import { ObjectId, Int32 } from "bson";
+import {mongo} from '../mongo'
+
+
+export enum PostFields{
+    userId = 'userId',
+    userName = 'userName',
+    numComments = 'numComments',
+    caption = 'caption'
+}
+
+export interface post extends Document{
+    userId: ObjectId,
+    userName: string,
+    numComments: Int32,
+    caption: string
+}
+
+
+class PostCollection {
+    private _collection!: Collection<post>;
+    get collection(){
+        if(!this._collection){
+            this._collection = mongo.db.collection<post>('Post')
+        }
+        return this._collection
+    }
+}
+
+
+declare global{
+    interface ProxyConstructor{
+        new<T, P extends Document> (target: T, handler: ProxyHandler<any>): Collection<P>
+    }
+}
+
+export const Post = new Proxy<PostCollection, post>(new PostCollection(), {
+    get(target, prop){
+        return target.collection[prop]
+    }
+})

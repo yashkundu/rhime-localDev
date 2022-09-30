@@ -1,27 +1,45 @@
 import {authenticate} from '../utils/authenticate'
-import Link from 'next/link'
 
-const Index = (props) => {
+
+import Feed from "../components/Feed";
+
+
+const Index = ({ newsResults, randomUsersResults, ...props }) => {
     return (
-        <>
-        <h3>Welcome to the index page : )</h3>
-        <h2> Click this to authorize spotify :)</h2>
-        <Link href="/api/spotify/authorize">
-          <a>Authorize spotify</a>
-        </Link>
-        </>
+        <Feed {...props}/>
     )
 }
 
 export default Index
 
-export const getServerSideProps = authenticate(async () => {
+export const getServerSideProps = async () => {
+
+    const newsResults = await fetch(
+        "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
+    ).then((res) => res.json());
+
+    // Who to follow section
+
+    let randomUsersResults = [];
+
+    try {
+    const res = await fetch(
+        "https://randomuser.me/api/?results=30&inc=name,login,picture"
+    );
+
+    randomUsersResults = await res.json();
+    } catch (e) {
+    randomUsersResults = [];
+    }
+
+
     return {
         props: {
-
+            newsResults,
+            randomUsersResults,
+            user: {userName: 'yashkundu', name: 'Yashasvi'}
         }
     }
-})
+}
 
 
-  

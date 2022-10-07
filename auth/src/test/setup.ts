@@ -1,5 +1,4 @@
 import { mongo } from "../db/mongo";
-import {app} from '../app'
 
 beforeAll(async () => {
     await mongo.connect('mongodb://127.0.0.1:27017')

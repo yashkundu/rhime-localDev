@@ -3,8 +3,6 @@ import { app } from '../../app'
 import { StatusCodes } from 'http-status-codes'
 
 const obj = {
-    firstName: "Yashasvi",
-    lastName: "Kundu",
     userName: "yashkundu",
     email: "yashkundu@gmail.com",
     password: "yashkundu@123"

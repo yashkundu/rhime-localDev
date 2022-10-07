@@ -1,5 +1,5 @@
 import { UserProfile } from '../../db/collections/userProfileCollection'
-import {ObjectId} from 'bson'
+import {ObjectId, Int32} from 'bson'
 import {faker} from '@faker-js/faker'
 import { getCookie } from './jwt'
 
@@ -14,9 +14,7 @@ export const createUsers = async (n: number) => {
         userId: new ObjectId(),
         firstName: faker.name.firstName(),
         userName: faker.internet.userName(),
-        email: faker.internet.email(),
-        minionCount: 0,
-        messiahCount: 0
+        email: faker.internet.email()
       }))
       cookies[i] = getCookie({userId: users[i].userId.toHexString(), userName: users[i].userName})
     }

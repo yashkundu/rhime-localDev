@@ -7,15 +7,13 @@ import { encrypt } from "../utils/passwordEncryption";
 
 
 const signup = async (req: Request, res: Response) => {
-    const {firstName, lastName, email, userName, password} = req.body
+    const {email, userName, password} = req.body
     const hashedPass = await encrypt(password)
-    const userResult = await User.insertOne({
-        firstName, 
-        lastName, 
+    const userResult = await User.insertOne({ 
         email, 
         userName, 
-        password: hashedPass,
-        isValid: true})
+        password: hashedPass
+    })
     if(!userResult.acknowledged) throw new DatabaseError('Error in inserting user to the database')
     res.status(StatusCodes.CREATED).json(userResult)
 }

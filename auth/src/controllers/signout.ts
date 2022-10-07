@@ -6,10 +6,6 @@ const signout = (req: Request, res: Response) => {
         httpOnly: true,
         expires: new Date(Date.now())
     })
-    res.cookie('refreshToken', null, {
-        httpOnly: true,
-        expires: new Date(Date.now())
-    })
     res.sendStatus(StatusCodes.OK)
 }
 

@@ -40,7 +40,7 @@ it('sending invalid data to update the profile',async () => {
     .expect(StatusCodes.BAD_REQUEST)
 
     await request(app)
-    .patch('/api/user/profile/update')
+    .patch('/api/user/${user.userId}/profile')
     .send({firstName: 'yashKundu', gender: 'someelse'})
     .set('Cookie', cookie)
     .expect(StatusCodes.BAD_REQUEST)

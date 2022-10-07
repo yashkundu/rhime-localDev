@@ -1,6 +1,6 @@
 import { mongo } from '../mongo';
 import {Document, Collection} from 'mongodb'
-import { ObjectId } from 'bson';
+import { ObjectId, Int32 } from 'bson';
 
 
 export enum UserProfileFields{
@@ -13,8 +13,6 @@ export enum UserProfileFields{
     age = 'age',
     gender = 'gender',
     profileImage = 'profileImage',
-    minionCount = 'minionCount',
-    messiahCount = 'messiahCount'
 }
 
 type genders = 'male' | 'female'
@@ -23,14 +21,12 @@ export interface userProfile extends Document{
     userId: ObjectId;
     userName: string;
     email: string;
-    firstName: string;
+    firstName?: string;
     lastName?: string;
     bio?: string;
-    age?: number;
+    age?: Int32;
     gender?: genders;
     profileImage?: string;
-    minionCount: number;
-    messiahCount: number;
 } 
 
 

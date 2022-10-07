@@ -11,7 +11,6 @@ import { pinoOptions, ErrorHandler, NotFoundMware } from '@rhime/common'
 
 
 import { profileRouter } from './routes/profileRouter'
-import { generalUserRouter } from './routes/generalUserRouter'
 
 
 
@@ -24,7 +23,6 @@ app.use(express.json())
 
 
 app.use('/api/user/:userId/profile', profileRouter)
-app.use('/api/user/:userId', generalUserRouter)
 
 
 

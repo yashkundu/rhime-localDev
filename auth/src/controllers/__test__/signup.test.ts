@@ -4,8 +4,6 @@ import {StatusCodes} from 'http-status-codes'
 import {user, User} from '../../db/collections/userCollection'
 
 const obj = {
-    firstName: "Yashasvi",
-    lastName: "Kundu",
     userName: "yashkundu",
     email: "yashkundu@gmail.com",
     password: "yashkundu@123"
@@ -18,8 +16,6 @@ it('Signing up with invalid data', async () => {
     .send(obj)
     .expect(StatusCodes.BAD_REQUEST);
 
-    await makeRequest({...obj, firstName: 'Yash@'})
-    await makeRequest({...obj, firstName: undefined})
     await makeRequest({...obj, email:'yash@agd'})
     await makeRequest({...obj, userName: '.adfafg'})
     await makeRequest({...obj, email: undefined})

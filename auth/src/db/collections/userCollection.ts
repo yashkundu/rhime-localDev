@@ -2,23 +2,15 @@ import {mongo} from '../mongo'
 import {Collection, Document, ObjectId} from 'mongodb'
 
 export enum UserFields{
-    firstName = 'firstName',
-    lastName = 'lastName',
     email = 'email',
     userName = 'userName',
-    password = 'password',
-    isValid = 'isValid',
-    sessionId = 'sessionId'
+    password = 'password'
 }
 
 export interface user extends Document{
-    firstName: string;
-    lastName?: string;
     email: string;
     userName: string;
-    password: string;
-    isValid: boolean;
-    sessionId?: ObjectId
+    password: string
 }
 
 class UserCollection{
@@ -28,6 +20,12 @@ class UserCollection{
             this._collection = mongo.db.collection<user>('User')
         }
         return this._collection
+    }
+}
+
+declare global{
+    interface ProxyConstructor {
+        new<T, P extends Document> (target: T, handler: ProxyHandler<any>) : Collection<P>
     }
 }
 

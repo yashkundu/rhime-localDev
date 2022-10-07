@@ -20,15 +20,6 @@ export const createAccessToken = (user: WithId<user>) => {
     })
 }
 
-const createRefreshToken = (sessionId: ObjectId) => {
-    const payload = {
-        sessionId
-    }
-    return createJWT(payload, process.env.REFRESH_TOKEN_SECRET!, {
-        expiresIn: '20d'
-    })
-}
-
 export const attachAccessToken = (res: Response, user: WithId<user> ) => {
     const token = createAccessToken(user)
     res.cookie('accessToken', token, {
@@ -39,25 +30,10 @@ export const attachAccessToken = (res: Response, user: WithId<user> ) => {
     })
 }
 
-export const attachRefreshToken = (res: Response, sessionId: ObjectId) => {
-    const token = createRefreshToken(sessionId)
-    res.cookie('refreshToken', token, {
-        signed: true,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: ms('20d'),
-        path: "/api/auth/refresh"
-    })
-}
-
-
 export const validateAccessToken = (token: string) => {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!)
 }
 
-export const validateRefreshToken = (token: string) => {
-    return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!)
-}
 
 
 

@@ -1,10 +1,9 @@
-import { ObjectID } from "bson";
 import { Request, Response, NextFunction } from "express";
 import { UnauthenticatedError } from "../errors/unauthenticatedError";
 import { validateAccessToken } from "../utils/jwt";
 
 interface userProp{
-    userId: ObjectID;
+    userId: string;
     userName: string
 }
 

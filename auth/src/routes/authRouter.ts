@@ -10,7 +10,7 @@ import { User, UserFields } from '../db/collections/userCollection'
 
 import { userSchema } from '../schemas/userSchema'
 
-import { signup, signin, signout, refresh, currentUser } from '../controllers'
+import { signup, signin, signout, currentUser } from '../controllers'
 
 const router = express.Router()
 
@@ -18,7 +18,6 @@ const router = express.Router()
 router.post('/signup', [SchemaValidator(userSchema), UniqueConstraint(UserFields.email, User), UniqueConstraint(UserFields.userName, User)] , signup)
 router.post('/signin', RequiredConstraint([UserFields.email, UserFields.password]),  signin)
 router.post('/signout', signout)
-router.get('/refresh', refresh)
 router.get('/currentUser', authenticated, currentUser)
 
 

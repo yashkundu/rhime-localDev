@@ -1,14 +1,11 @@
 import {app} from './app'
 import {mongo} from './db/mongo'
-
+import { ds } from './ds/redis'
 
 
 
 const start = async () => {
     try {
-        // implement a fucntion to check if all the env variables are set
-        // other throw a big nasty error :)
-        // envCheckerFunc() 
         const envVariables = ['ACCESS_TOKEN_SECRET', 
         'SIGNED_COOKIE_SECRET']
 
@@ -18,7 +15,12 @@ const start = async () => {
 
         await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
         console.log('User service connected to MongoDb ... ');
-        
+
+        await ds.connect({host: '127.0.0.1', port: 6379})
+        console.log('User service connected to Redis instance ... ');
+
+        ds.defineCommands()
+
         app.listen(14000, () => {
             console.log('Feed service is listening on port 14000...');
         })

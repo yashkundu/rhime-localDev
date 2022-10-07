@@ -9,8 +9,8 @@ const start = async () => {
         // implement a fucntion to check if all the env variables are set
         // other throw a big nasty error :)
         // envCheckerFunc() 
-        const envVariables = ['ACCESS_TOKEN_SECRET', 'REFRESH_TOKEN_SECRET', 
-        'SIGNED_COOKIE_SECRET', 'SPOTIFY_CLIENT_KEY', 'SPOTIFY_CLIENT_SECRET']
+        const envVariables = ['ACCESS_TOKEN_SECRET', 'SIGNED_COOKIE_SECRET', 
+        'SPOTIFY_CLIENT_KEY', 'SPOTIFY_CLIENT_SECRET']
 
         for(const x of envVariables){
             if(!process.env[x]) throw new Error('Environment variables not declared')

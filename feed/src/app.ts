@@ -15,7 +15,7 @@ import {feedRouter} from './routes/feedRouter'
 const app = express()
 
 
-app.use(pino(pinoOptions('info', false, false)))
+app.use(pino(pinoOptions('error', false, false)))
 app.use(cookieParser(process.env.SIGNED_COOKIE_SECRET))
 app.use(express.json())
 

@@ -4,8 +4,6 @@ import { StatusCodes } from 'http-status-codes'
 
 
 const obj = {
-    firstName: "Yashasvi",
-    lastName: "Kundu",
     userName: "yashkundu",
     email: "yashkundu@gmail.com",
     password: "yashkundu@123"
@@ -55,5 +53,4 @@ it('Successfuly signed in and the cookie is set', async () => {
     .expect(StatusCodes.OK)
     
     expect(response.headers['set-cookie'][0]).toMatch(/^accessToken=[\S\s]+/)
-    expect(response.headers['set-cookie'][1]).toMatch(/^refreshToken=[\S\s]+/)
 })

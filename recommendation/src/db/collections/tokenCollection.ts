@@ -1,26 +1,26 @@
 import {mongo} from '../mongo'
 import { Collection, Document, ObjectId } from "mongodb";
 
-export enum InfoFields{
-    userId = 'userId',
+export enum TokenFields{
+    _id = '_id',  
     access_token = 'access_token',
     refresh_token = 'refresh_token',
     expiration = 'expiration'
 }
 
 
-export interface info extends Document{
-    userId: ObjectId;
+export interface token extends Document{
+    _id: ObjectId;                          // userId
     access_token: string;
     refresh_token: string;
     expiration: Date
 }
 
-class InfoCollection {
-    private _collection?: Collection<info>
+class TokenCollection {
+    private _collection?: Collection<token>
     get collection(){
         if(!this._collection){
-            this._collection = mongo.db.collection<info>('Info')
+            this._collection = mongo.db.collection<token>('Token')
         }
         return this._collection
     }
@@ -33,7 +33,7 @@ declare global{
 }
 
 
-export const Info = new Proxy<InfoCollection, info>(new InfoCollection(), {
+export const Token = new Proxy<TokenCollection, token>(new TokenCollection(), {
     get(target, prop){
         return target.collection[prop]
     }

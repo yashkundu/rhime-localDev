@@ -1,7 +1,10 @@
 import axios from "axios";
 import { Request, Response } from "express";
-import { Info } from "../db/collections/infoCollection"; 
+import { Token } from "../db/collections/tokenCollection"; 
 import { ObjectID } from "bson";
+
+import { ltTaskQueue } from "../ltTaskQueue";
+
 
 
 export const callback = async (req: Request, res: Response) => {
@@ -28,14 +31,22 @@ export const callback = async (req: Request, res: Response) => {
                 }
             }
         )
-        const info = await Info.insertOne({
-            userId: req.user.userId as ObjectID, 
+        const info = await Token.insertOne({
+            _id: new ObjectID(req.user.userId), 
             access_token: data.access_token as string,
             refresh_token: data.refresh_token as string,
             expiration: new Date(Date.now() + data.expires_in*1000)
         })
 
         if(!info.acknowledged) throw new Error('Error in inserting the info doc')
+
+
+        //push a job to get all the user favourites and find recommends to the 
+        // task queue
+        const job = await ltTaskQueue.queue.add('initialFetch', {
+            userId: req.user.userId
+        })
+
         return res.redirect('http://localhost:80')
 
     } catch (error) {

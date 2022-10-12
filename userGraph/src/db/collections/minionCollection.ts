@@ -10,6 +10,8 @@ export enum MinionFields {
     minionId = 'minionId'
 }
 
+// if an index is used for a query then the order of the returned documents
+// will match the order in index even if it is composite index
 export interface minion extends Document{
     messiahId: ObjectId;          // (messiahId, minionId) will be the indexed field
     minionId: ObjectId

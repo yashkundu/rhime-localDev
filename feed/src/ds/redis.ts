@@ -1,4 +1,4 @@
-import {default as Redis} from 'ioredis'
+import {default as Redis, RedisOptions} from 'ioredis'
 
 /*
 user:ObjectId ->  A sorted set of k postIds
@@ -13,12 +13,9 @@ class RedisWrapper{
         }
         return this._redis
     }
-    connect({host, port}: {host: string; port: number}){
+    connect(opts: RedisOptions){
         return new Promise<void>((resolve, reject) => {
-            this._redis = new Redis({
-                host: host,
-                port: port
-            })
+            this._redis = new Redis(opts)
             this._redis.on('connect', () => {
                 resolve()
             })

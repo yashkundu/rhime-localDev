@@ -10,6 +10,7 @@ import { pinoOptions, ErrorHandler, NotFoundMware } from '@rhime/common'
 
 
 import { spotifyAuthRouter } from './routes/spotifyAuthRouter'
+import { recommendRouter } from './routes/recommendRouter'
 
 
 const app = express()
@@ -20,7 +21,7 @@ app.use(express.json())
 
 
 app.use('/api/spotify', spotifyAuthRouter)
-
+app.use('/api/spotify/recommendation', recommendRouter)
 
 app.use(NotFoundMware)
 app.use(ErrorHandler)

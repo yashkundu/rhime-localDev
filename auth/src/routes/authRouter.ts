@@ -14,6 +14,10 @@ import { signup, signin, signout, currentUser } from '../controllers'
 
 const router = express.Router()
 
+router.get('/hello', (req, res) => {
+    res.send('Hello fm')
+})
+
 
 router.post('/signup', [SchemaValidator(userSchema), UniqueConstraint(UserFields.email, User), UniqueConstraint(UserFields.userName, User)] , signup)
 router.post('/signin', RequiredConstraint([UserFields.email, UserFields.password]),  signin)

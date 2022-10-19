@@ -1,5 +1,5 @@
 {
-  "name": "spotify",
+  "name": "gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,25 +13,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rhime/common": "^1.0.15",
     "@rhime/discovery": "^1.0.5",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.14",
-    "@types/node": "^18.7.18",
-    "axios": "^0.27.2",
-    "bullmq": "^2.1.3",
+    "@types/http-proxy": "^1.17.9",
+    "@types/node": "^18.8.5",
+    "chalk": "^4.1.2",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.0.2",
-    "express": "^4.18.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
-    "http-status-codes": "^2.2.0",
-    "ioredis": "^5.2.3",
-    "mongodb": "^4.9.1",
-    "pino-http": "^8.2.0",
-    "pino-pretty": "^9.1.0"
+    "express-rate-limit": "^6.6.0",
+    "http-proxy": "^1.18.1",
+    "moment": "^2.29.4",
+    "pino-http": "^8.2.1",
+    "pino-pretty": "^9.1.1"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   }
 }

@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rhime/discovery": "^1.0.5",
     "@types/lodash": "^4.14.186",
     "@types/node": "^18.8.3",
     "axios": "^1.1.2",

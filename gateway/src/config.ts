@@ -1,0 +1,108 @@
+import { service } from "@rhime/discovery"
+
+interface ServiceRecord {
+    serviceName: service;
+    endpoint: string;
+    authentication: boolean;
+    changeOrigin: boolean;
+}
+
+const PROXY_ROUTES: ServiceRecord[] = [
+    {
+        serviceName: service.auth,
+        endpoint: '/api/auth',
+        authentication: false,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.feed,
+        endpoint: '/api/feed',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.notification,
+        endpoint: '/api/notification',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.post,
+        endpoint: '/api/post',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.recommendation,
+        endpoint: '/api/recommendation',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.spotify,
+        endpoint: '/api/spotify',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.user,
+        endpoint: '/api/user',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.userGraph,
+        endpoint: '/api/userGraph',
+        authentication: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.client,
+        endpoint: '/',
+        authentication: false,
+        changeOrigin: true
+    },
+]
+
+
+
+
+
+// const PROXY_ROUTES = [
+    // {
+    //     url: '/auth',
+    //     auth: true,
+    //     rateLimit: {
+    //         windowMs: 1000 * 60 * 15,
+    //         max: 5,
+    //         standardHeaders: true,
+    //         legacyHeaders: false
+    //     },
+    //     proxy: {
+    //         target: 'https://www.google.com/',
+    //         changeOrigin: true,
+    //         pathRewrite: {
+    //             '^/auth': '',
+    //         }
+    //     }
+    // },
+    // {
+    //     url: '/notAuth',
+    //     auth: false,
+    //     rateLimit: {
+    //         windowMs: 1000 * 60 * 15,
+    //         max: 5,
+    //         standardHeaders: true,
+    //         legacyHeaders: false
+    //     },
+    //     proxy: {
+    //         target: 'https://www.google.com/',
+    //         changeOrigin: true,
+    //         pathRewrite: {
+    //             '^/notAuth': '',
+    //         }
+    //     }
+    // }
+// ]
+
+export {PROXY_ROUTES}

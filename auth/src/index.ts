@@ -1,6 +1,7 @@
 import {app} from './app'
 import {mongo} from './db/mongo'
-
+import { Registry, service } from '@rhime/discovery'
+import {nats} from '@rhime/events'
 
 
 const start = async () => {
@@ -10,7 +11,8 @@ const start = async () => {
         // other throw a big nasty error :)
         // envCheckerFunc() 
         const envVariables = ['ACCESS_TOKEN_SECRET', 'SIGNED_COOKIE_SECRET', 
-        'SPOTIFY_CLIENT_KEY', 'SPOTIFY_CLIENT_SECRET']
+        'SPOTIFY_CLIENT_KEY', 'SPOTIFY_CLIENT_SECRET', 'APP_URL',
+         'APP_PORT', 'ETCD_KEY_TTL']
 
         for(const x of envVariables){
             if(!process.env[x]) throw new Error('Environment variables not declared')
@@ -18,16 +20,27 @@ const start = async () => {
 
         await mongo.connect('mongodb://127.0.0.1:27017')
         console.log('Auth service connected to MongoDb ... ');
-        app.listen(5000, () => {
+        app.listen(Number(process.env.APP_PORT), async () => {
             console.log('Auth service listening on port 5000...');
+            // implement(func)
+
+            const registry = new Registry({
+                hosts: process.env.etcd_url as string
+            })
+
+            await registry.register(service.auth, {
+                url: process.env.APP_URL as string,
+            }, {ttl: Number(process.env.ETCD_KEY_TTL)})
+
+            await nats.connect({
+                servers: process.env.nats_url
+            })
         })
         
     } catch (error) {
         console.log(error);
-        
     }
 }
 
 start()
-
 

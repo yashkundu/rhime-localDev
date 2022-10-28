@@ -39,8 +39,8 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "@grpc/proto-loader": "^0.7.3",
-    "@rhime/common": "^1.0.15",
-    "@rhime/discovery": "^1.0.5",
+    "@rhime/common": "^1.0.23",
+    "@rhime/discovery": "^1.0.11",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.9",

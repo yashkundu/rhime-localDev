@@ -4,6 +4,7 @@ interface ServiceRecord {
     serviceName: service;
     endpoint: string;
     authentication: boolean;
+    authorization?: boolean;
     changeOrigin: boolean;
 }
 
@@ -18,24 +19,35 @@ const PROXY_ROUTES: ServiceRecord[] = [
         serviceName: service.feed,
         endpoint: '/api/feed',
         authentication: true,
+        authorization: true,
         changeOrigin: true
     },
     {
         serviceName: service.notification,
         endpoint: '/api/notification',
         authentication: true,
+        authorization: true,
         changeOrigin: true
     },
     {
         serviceName: service.post,
         endpoint: '/api/post',
         authentication: true,
+        authorization: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.comment,
+        endpoint: '/api/comment',
+        authentication: true,
+        authorization: true,
         changeOrigin: true
     },
     {
         serviceName: service.recommendation,
         endpoint: '/api/recommendation',
         authentication: true,
+        authorization: true,
         changeOrigin: true
     },
     {
@@ -48,20 +60,16 @@ const PROXY_ROUTES: ServiceRecord[] = [
         serviceName: service.user,
         endpoint: '/api/user',
         authentication: true,
+        authorization: true,
         changeOrigin: true
     },
     {
         serviceName: service.userGraph,
         endpoint: '/api/userGraph',
         authentication: true,
+        authorization: true,
         changeOrigin: true
-    },
-    {
-        serviceName: service.client,
-        endpoint: '/',
-        authentication: false,
-        changeOrigin: true
-    },
+    }
 ]
 
 

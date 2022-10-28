@@ -6,6 +6,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClearIcon from '@mui/icons-material/Clear';
 import { IconButton } from '@mui/material';
 
+
+import { hof } from '../utils/hof';
+
 const connect = () => {
 
     const [first, setFirst] = useState(1)
@@ -49,15 +52,6 @@ const connect = () => {
 }
 
 export default connect
-
-export const getServerSideProps = async () => {
-
-    return {
-        props: {
-            user: {userName: 'yashkundu', name: 'Yashasvi'}
-        }
-    }
-}
 
 const CardInfo = ({num}) => {
     return (
@@ -112,3 +106,13 @@ const user = {
     tracks,
     genres
 }
+
+export const getServerSideProps = hof( async () => {
+    return {
+        props: {
+            sideBars: true,
+            authenticationReq: true,
+            authorizationReq: true
+        }
+    }
+})

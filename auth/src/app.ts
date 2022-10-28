@@ -11,8 +11,7 @@ import { pinoOptions } from './config/pinoConfig'
 
 
 
-import { NotFoundMware } from '@rhime/common'
-import { ErrorHandler } from './middlewares/errorHandler'
+import { NotFoundMware, ErrorHandler } from '@rhime/common'
 
 
 import { authRouter } from './routes/authRouter'

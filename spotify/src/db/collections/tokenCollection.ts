@@ -8,7 +8,7 @@ export enum TokenFields{
     expiration = 'expiration'
 }
 
-
+// somehow make it stateless
 export interface token extends Document{
     _id: ObjectId;                          // userId
     access_token: string;

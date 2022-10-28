@@ -3,25 +3,42 @@ import { loginFields } from "./formFields";
 import FormAction from "./FormAction";
 import Input from "./Input";
 
+import { useRequest } from '../../hooks/useRequest';
+import {useRouter} from 'next/router'
+
 const fields=loginFields;
 let fieldsState = {};
 fields.forEach(field=>fieldsState[field.id]='');
 
+import { Alert } from '@mui/material';
+
 export default function Login(){
     const [loginState,setLoginState]=useState(fieldsState);
+    const router = useRouter()
+
+    const {doRequest, errors} = useRequest({
+        url: '/api/auth/signin',
+        method: 'post',
+        body: {
+            userName: loginState.userName,
+            password: loginState.password
+        },
+        onSuccess: () => router.push('/')
+      })
+
 
     const handleChange=(e)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
     }
 
-    const handleSubmit=(e)=>{
+    const handleSubmit= async (e)=>{
         e.preventDefault();
-        authenticateUser();
+        await login();
     }
 
     //Handle Login API Integration here
-    const authenticateUser = () =>{
-
+    const login = async () =>{
+        await doRequest()
     }
 
     return(
@@ -45,6 +62,9 @@ export default function Login(){
                 )
             }
         </div>
+        {(errors && !errors[0].field) && (
+            <Alert severity="error">{errors[0].msg}</Alert>
+        )}
 
         <FormAction handleSubmit={handleSubmit} text="Login"/>
 

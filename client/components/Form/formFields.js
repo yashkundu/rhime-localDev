@@ -1,13 +1,13 @@
 const loginFields=[
     {
-        labelText:"Email address",
-        labelFor:"email-address",
-        id:"email-address",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
+        labelText:"UserName",
+        labelFor:"userName",
+        id:"userName",
+        name:"userName",
+        type:"text",
+        autoComplete:"userName",
         isRequired:true,
-        placeholder:"Email address"   
+        placeholder:"Username"   
     },
     {
         labelText:"Password",
@@ -23,19 +23,21 @@ const loginFields=[
 
 const signupFields=[
     {
-        labelText:"Username",
-        labelFor:"username",
-        id:"username",
-        name:"username",
+        labelText:"UserName",
+        labelFor:"userName",
+        error: "The username should be of min length 2.",
+        id:"userName",
+        name:"userName",
         type:"text",
-        autoComplete:"username",
+        autoComplete:"userName",
         isRequired:true,
         placeholder:"Username"   
     },
     {
         labelText:"Email address",
         labelFor:"email-address",
-        id:"email-address",
+        error: "Not a valid email address",
+        id:"email",
         name:"email",
         type:"email",
         autoComplete:"email",
@@ -44,6 +46,7 @@ const signupFields=[
     },
     {
         labelText:"Password",
+        error: "Password should be of min 7 characters containing atleast one number, one letter and one special character",
         labelFor:"password",
         id:"password",
         name:"password",
@@ -51,16 +54,6 @@ const signupFields=[
         autoComplete:"current-password",
         isRequired:true,
         placeholder:"Password"   
-    },
-    {
-        labelText:"Confirm Password",
-        labelFor:"confirm-password",
-        id:"confirm-password",
-        name:"confirm-password",
-        type:"password",
-        autoComplete:"confirm-password",
-        isRequired:true,
-        placeholder:"Confirm Password"   
     }
 ]
 

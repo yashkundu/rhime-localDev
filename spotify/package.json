@@ -7,13 +7,16 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "updateCommon": "npm uninstall @rhime/common && npm install @rhime/common",
-    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery"
+    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery",
+    "updateEvents": "npm uninstall @rhime/events && npm install @rhime/events"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rhime/discovery": "^1.0.5",
+    "@rhime/common": "^1.0.23",
+    "@rhime/discovery": "^1.0.11",
+    "@rhime/events": "^1.0.14",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.14",
     "@types/node": "^18.7.18",
@@ -26,6 +29,7 @@
     "http-status-codes": "^2.2.0",
     "ioredis": "^5.2.3",
     "mongodb": "^4.9.1",
+    "nats": "^2.8.0",
     "pino-http": "^8.2.0",
     "pino-pretty": "^9.1.0"
   },

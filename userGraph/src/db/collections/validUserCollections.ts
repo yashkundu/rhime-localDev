@@ -11,6 +11,7 @@ export enum ValidUserFields {
 }
 
 export interface validUser extends Document{
+    _id: ObjectId,                              // userId
     minionCount: Int32,
     messiahCount: Int32
 }

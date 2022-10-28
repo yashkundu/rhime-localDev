@@ -21,3 +21,11 @@
 .flip-card-back {
     transform: rotateY(180deg);
 }
+
+input[type=text]:focus {
+    box-shadow: none;
+}
+
+textarea {
+    resize: none;
+}

@@ -1,20 +1,22 @@
 import { Document, Collection } from "mongodb";
-import { ObjectId, Int32 } from "bson";
+import { ObjectId } from "bson";
 import {mongo} from '../mongo'
 
 
 export enum PostFields{
     userId = 'userId',
     userName = 'userName',
-    numComments = 'numComments',
-    caption = 'caption'
+    caption = 'caption',
+    trackId = 'trackId',
+    timeStamp = 'timeStamp'
 }
 
 export interface post extends Document{
     userId: ObjectId,
     userName: string,
-    numComments: Int32,
-    caption: string
+    caption?: string,
+    trackId: string,
+    timeStamp: Date,
 }
 
 

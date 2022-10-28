@@ -1,10 +1,10 @@
-import {authenticate} from '../utils/authenticate'
+import {hof} from '../utils/hof'
 
 
 import Feed from "../components/Feed";
 
 
-const Index = ({ newsResults, randomUsersResults, ...props }) => {
+const Index = ({ ...props }) => {
     return (
         <Feed {...props}/>
     )
@@ -12,34 +12,14 @@ const Index = ({ newsResults, randomUsersResults, ...props }) => {
 
 export default Index
 
-export const getServerSideProps = async () => {
-
-    const newsResults = await fetch(
-        "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
-    ).then((res) => res.json());
-
-    // Who to follow section
-
-    let randomUsersResults = [];
-
-    try {
-    const res = await fetch(
-        "https://randomuser.me/api/?results=30&inc=name,login,picture"
-    );
-
-    randomUsersResults = await res.json();
-    } catch (e) {
-    randomUsersResults = [];
-    }
-
-
+export const getServerSideProps = hof( async () => {
     return {
         props: {
-            newsResults,
-            randomUsersResults,
-            user: {userName: 'yashkundu', name: 'Yashasvi'}
+            sideBars: true,
+            authenticationReq: true,
+            authorizationReq: true
         }
     }
-}
+})
 
 

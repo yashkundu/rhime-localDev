@@ -1,9 +1,7 @@
 import express from 'express'
 
-import { SchemaValidator } from '../middlewares/schemaValidator'
-import { UniqueConstraint } from '../middlewares/uniqueConstraint'
-import { RequiredConstraint } from '../middlewares/requiredConstraint'
-import {authenticated} from '../middlewares/authenticated'
+
+import { authenticated, RequiredConstraint, SchemaValidator, UniqueConstraint } from '@rhime/common'
 
 
 import { User, UserFields } from '../db/collections/userCollection'
@@ -20,7 +18,7 @@ router.get('/hello', (req, res) => {
 
 
 router.post('/signup', [SchemaValidator(userSchema), UniqueConstraint(UserFields.email, User), UniqueConstraint(UserFields.userName, User)] , signup)
-router.post('/signin', RequiredConstraint([UserFields.email, UserFields.password]),  signin)
+router.post('/signin', RequiredConstraint([UserFields.userName, UserFields.password]),  signin)
 router.post('/signout', signout)
 router.get('/currentUser', authenticated, currentUser)
 

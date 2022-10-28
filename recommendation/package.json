@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rhime/discovery": "^1.0.5",
+    "@rhime/discovery": "^1.0.10",
     "@types/lodash": "^4.14.186",
     "@types/node": "^18.8.3",
     "axios": "^1.1.2",

@@ -9,15 +9,15 @@ import {ObjectId} from 'bson'
 
 export const getProfileInfo = async (req: Request, res: Response) => {
     const getterUserId = new ObjectId(req.params.userId)
-    const profileInfo = await UserProfile.findOne({userId: getterUserId})
+    const profileInfo = await UserProfile.findOne({_id: getterUserId})
     if(!profileInfo) throw new NotFoundError('Resource not found')
-    const {email, userId, _id, ...sendableInfo} = profileInfo
+    const {email, _id, ...sendableInfo} = profileInfo
     res.status(StatusCodes.OK).send(sendableInfo)
 }
 
 export const updateProfileInfo = async (req: Request, res: Response) => {
     const userId = new ObjectId(req.params.userId)
-    const updated = await UserProfile.updateOne({userId: userId}, {
+    const updated = await UserProfile.updateOne({_id: userId}, {
         $set: {
             ...(req.body)
         }

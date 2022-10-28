@@ -4,7 +4,6 @@ import { ObjectId, Int32 } from 'bson';
 
 
 export enum UserProfileFields{
-    userId = 'userId',
     userName = 'userName',
     email = 'email',
     firstName = 'firstName',
@@ -18,7 +17,7 @@ export enum UserProfileFields{
 type genders = 'male' | 'female'
 
 export interface userProfile extends Document{
-    userId: ObjectId;
+    _id: ObjectId;                                  // userId
     userName: string;
     email: string;
     firstName?: string;

@@ -5,16 +5,19 @@ import { ObjectID } from "bson";
 
 import { ltTaskQueue } from "../ltTaskQueue";
 
+import {nats, UserAuthorizedEvent, subject, noun, verb} from '@rhime/events'
+
+
 
 
 export const callback = async (req: Request, res: Response) => {
     
     const {code, state} = req.query
-    const redirect_uri = 'http://localhost:80/api/spotify/callback'
+    const redirect_uri = `${process.env.gateway_url}/api/spotify/callback`
 
     if(!code){
         // authorization failed
-        return res.redirect(`http://localhost:80?error=${req.query.error}`)
+        return res.redirect(`/auth/spotify?error=${req.query.error}`)
     }
     
     try {
@@ -35,10 +38,17 @@ export const callback = async (req: Request, res: Response) => {
             _id: new ObjectID(req.user.userId), 
             access_token: data.access_token as string,
             refresh_token: data.refresh_token as string,
-            expiration: new Date(Date.now() + data.expires_in*1000)
+            expiration: new Date(Date.now() + (data.expires_in-10)*1000)
         })
 
+        console.log('Token inserted in spotifyDb');
+        
+
         if(!info.acknowledged) throw new Error('Error in inserting the info doc')
+
+        await nats.publish(subject(noun.user, verb.authorized), {
+            userId: req.user.userId
+        })
 
 
         //push a job to get all the user favourites and find recommends to the 
@@ -47,7 +57,13 @@ export const callback = async (req: Request, res: Response) => {
             userId: req.user.userId
         })
 
-        return res.redirect('http://localhost:80')
+        res.cookie('accessToken', null, {
+            httpOnly: true,
+            expires: new Date(Date.now())
+        })
+
+        // Please sign in again
+        return res.redirect('/auth/signin')
 
     } catch (error) {
         // if error comes maybe offload this task to some worker thread which will
@@ -55,7 +71,7 @@ export const callback = async (req: Request, res: Response) => {
         //@ts-ignore
         console.log(error);
         
-        res.redirect(`http://localhost:80?error=${'Authorizaion did not happen, try again'}`)
+        res.redirect(`/auth/spotify?error=${'Authorizaion did not happen, try again'}`)
     }
     
 }

@@ -19,7 +19,8 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "@grpc/proto-loader": "^0.7.3",
-    "@rhime/discovery": "^1.0.5",
+    "@rhime/common": "^1.0.23",
+    "@rhime/discovery": "^1.0.11",
     "@types/node": "^18.7.16",
     "mongodb": "^4.9.1"
   }

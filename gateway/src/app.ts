@@ -9,11 +9,13 @@ import pino from 'pino-http'
 import {NotFoundMware, ErrorHandler, pinoOptions} from '@rhime/common';
 
 import { proxyMware } from './middlewares/proxyMware';
+import { gatewayAuthenticator } from './middlewares/gatewayAuthenticator';
 
 const app = express();
 
-app.use(pino(pinoOptions('info', true, true)))
+app.use(pino(pinoOptions('info', false, false)))
 app.use(cookieParser(process.env.SIGNED_COOKIE_SECRET))
+app.use(gatewayAuthenticator)
 
 
 app.use(proxyMware)

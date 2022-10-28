@@ -22,7 +22,7 @@ class MongoWrapper {
         const client = new MongoClient(mongoURI)
         await client.connect()
         this._client = client
-        this._db = client.db('auth')
+        this._db = client.db('authUser')
     }
 
 }

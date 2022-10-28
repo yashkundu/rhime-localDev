@@ -11,7 +11,7 @@ import Layout from '../components/Layout';
 
 import "../styles/globals.css";
 import "../styles/connect.css";
-import "../styles/colors"
+import "../styles/notFound.css";
 
 // Client-side cache shared for the whole session
 // of the user in the browser.
@@ -34,7 +34,11 @@ export default function MyApp(props) {
 				build upon. */}
 				<CssBaseline />
 
-				<Layout {...pageProps} Children={Component} />
+				{	(pageProps.sideBars) ? (
+					<Layout {...pageProps} Children={Component} />
+				): (
+					<Component {...pageProps} />
+				)}
 			
 			
 			</ThemeProvider>

@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
-    "lint": "next lint",
-    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery"
+    "dev": "next -p 3700",
+    "lint": "next lint"
   },
   "keywords": [],
   "author": "",
@@ -18,13 +17,13 @@
     "@heroicons/react": "^2.0.11",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.6",
-    "@rhime/discovery": "^1.0.5",
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",
     "framer-motion": "^7.3.6",
     "next": "^12.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-loader-spinner": "^5.3.4",
     "react-modal": "^3.15.1",
     "react-moment": "^1.1.2"
   },

@@ -13,7 +13,8 @@ const createJWT = (payload: Object, secretKey: string, options: jwt.SignOptions)
 export const createAccessToken = (user: WithId<user>) => {
     const payload = {
         userId: user._id,
-        userName: user.userName
+        userName: user.userName,
+        isAuth: user.isAuth
     }
     return createJWT(payload, process.env.ACCESS_TOKEN_SECRET!, {
         expiresIn: '1d'

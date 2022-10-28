@@ -18,8 +18,9 @@ export const useRequest = ({url, method, body, onSuccess}) => {
             }
             return response.data
         } catch (err) {
-            console.log('use Request Error -- ', err)
+            console.log('use Request Error -- ', err.response.data)
             setErrors(err.response.data.errors)
+            setTimeout(() => setErrors(null), 1000*10)
         }
     }
 

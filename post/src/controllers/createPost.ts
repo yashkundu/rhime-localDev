@@ -1,22 +1,73 @@
 import { Request, Response } from "express";
-import { Post } from "../db/collections/postCollection";
-import {ObjectId, Int32} from 'bson'
+import {ObjectId} from 'bson'
 import { StatusCodes } from "http-status-codes";
+
+import { BadRequestError } from "@rhime/common";
+
+import {mongo} from '../db/mongo'
+
+import { Post, post } from "../db/collections/postCollection";
+import { Track, track } from "../db/collections/trackCollection";
+
+import {nats, noun, verb, subject, PostCreatedEvent} from '@rhime/events'
+
+interface postRes extends post {
+    _id?: ObjectId
+} 
+
+
+const findAndInsertTrack = async (track: track) => {
+    const session = mongo.client.startSession()
+    try {
+        await session.withTransaction(async () => {
+            const trackRes = await Track.findOne({_id: track._id})
+            if(!trackRes) {
+                await Track.insertOne(track, {session})
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        throw error
+    } finally {
+        await session.endSession();
+    }
+}
 
 
 export const createPost = async (req: Request, res: Response) => {
-    const userId = new ObjectId(req.user.userId)
-    const post = {
-        userId: userId,
-        userName: req.user.userName,
-        caption: req.body.caption,
-        numComments: new Int32(0)
+    if(!req.body.trackName || !req.body.trackId || !req.body.artists) throw new BadRequestError('Invalid request to create post')
+    const charLimit = 280;
+    if(req.body.caption && req.body.caption.length>charLimit) throw new BadRequestError(`Length of caption cannot be greater than ${charLimit} character`)
+    
+
+    const track: track = {
+        _id: req.body.trackId,
+        trackName: req.body.trackName,
+        artists: req.body.artists.map((artist: any) => ({
+            artistName: artist.artistName, 
+            artistId: artist.artistId
+        })),
     }
+    if(req.body.listenUrl) track.listenUrl = req.body.listenUrl;
+    if(req.body.images) track.images = req.body.images
+
+    await findAndInsertTrack(track);
+
+    const post: postRes = {
+        userId: new ObjectId(req.userAuth.userId),
+        userName: req.userAuth.userName,
+        trackId: req.body.trackId,
+        timeStamp: new Date()
+    }
+    if(req.body.caption) post.caption = req.body.caption;
+    
     await Post.insertOne(post)
-    res.status(StatusCodes.OK).send({post: {
-        //@ts-ignore
-        _id: post._id,
-        userName: post.userName,
-        caption: post.caption
+
+    await nats.publish<PostCreatedEvent>(subject(noun.post, verb.created), {
+        postId: post._id?.toString() as string
+    })
+
+    res.status(StatusCodes.CREATED).send({post: {
+        _id: post._id?.toString(),
     }})
 }

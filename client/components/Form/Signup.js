@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { signupFields } from "./formFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
+import { useRequest } from '../../hooks/useRequest';
+import {useRouter} from 'next/router'
+
+import { Alert } from '@mui/material';
 
 const fields=signupFields;
 let fieldsState={};
@@ -10,18 +14,30 @@ fields.forEach(field => fieldsState[field.id]='');
 
 export default function Signup(){
     const [signupState,setSignupState]=useState(fieldsState);
+    const router = useRouter()
+
+    const {doRequest, errors} = useRequest({
+      url: '/api/auth/signup',
+      method: 'post',
+      body: {
+          userName: signupState.userName,
+          email: signupState.email,
+          password: signupState.password
+      },
+      onSuccess: () => router.push('/auth/signin')
+    })
 
     const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
 
-    const handleSubmit=(e)=>{
+    const handleSubmit= async (e)=>{
         e.preventDefault();
-        console.log(signupState)
-        createAccount()
+        await createAccount()
+        console.log('Errors ------ ', errors);
     }
 
     //handle Signup API Integration here
-    const createAccount=()=>{
-
+    const createAccount= async ()=>{
+      await doRequest()
     }
 
     return(
@@ -29,6 +45,7 @@ export default function Signup(){
         <div className="">
         {
                 fields.map(field=>
+                        (<>   
                         <Input
                             key={field.id}
                             handleChange={handleChange}
@@ -40,12 +57,17 @@ export default function Signup(){
                             type={field.type}
                             isRequired={field.isRequired}
                             placeholder={field.placeholder}
-                    />
-                
-                )
-            }
-          <FormAction handleSubmit={handleSubmit} text="Signup" />
-        </div>
+                          />
+                          {field.id===(errors && errors[0]?.field) && (
+                            <Alert severity="error">{field.error}</Alert>
+                          )}
+                        </>)
+                )}
+          {(errors && !errors[0].field) && (
+            <Alert severity="error">{errors[0].msg}</Alert>
+          )}
+        <FormAction handleSubmit={handleSubmit} text="Signup" />
+      </div>
 
          
 

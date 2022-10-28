@@ -2,11 +2,7 @@ import { Request, Response } from "express";
 import crypto from 'crypto'
 
 const userScopes = [
-    'user-read-recently-played', 'user-read-playback-position',
-    'playlist-read-collaborative', 'user-read-playback-state',
-    'streaming', 'user-top-read', 'user-follow-read', 
-    'user-read-currently-playing', 'user-library-read', 
-    'playlist-read-private', 'user-read-private'
+    'user-top-read'
 ]
 
 
@@ -15,7 +11,7 @@ export const authorize = (req: Request, res: Response) => {
 
     const state = crypto.randomBytes(8).toString('hex')
     const scope = userScopes.join(' ')
-    const redirect_uri = 'http://localhost:80/api/spotify/callback'
+    const redirect_uri = `${process.env.gateway_url}/api/spotify/callback`
 
     const qs = new URLSearchParams({
         response_type: 'code',

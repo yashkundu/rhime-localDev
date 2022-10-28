@@ -3,6 +3,8 @@ import Header from "../../components/Form/Header"
 import Login from "../../components/Form/Login";
 import * as SignupComponent from "../../components/Form/Signup";
 
+import {hof} from '../../utils/hof'
+
 const Signup = ({...props}) => {
 
 
@@ -13,7 +15,7 @@ const Signup = ({...props}) => {
               heading="Signup to create an account"
               paragraph="Already have an account? "
               linkName="Login"
-              linkUrl="/"
+              linkUrl="/auth/signin"
             />
             <SignupComponent.default/>
             </div>
@@ -21,38 +23,18 @@ const Signup = ({...props}) => {
     )
 }
 
-
 export default Signup
 
-
-
-export const getServerSideProps = async () => {
-
-    const newsResults = await fetch(
-        "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
-    ).then((res) => res.json());
-
-    // Who to follow section
-
-    let randomUsersResults = [];
-
-    try {
-    const res = await fetch(
-        "https://randomuser.me/api/?results=30&inc=name,login,picture"
-    );
-
-    randomUsersResults = await res.json();
-    } catch (e) {
-    randomUsersResults = [];
-    }
-
-
+export const getServerSideProps = hof( async () => {
     return {
         props: {
-            newsResults,
-            randomUsersResults,
-            user: null
+            sideBars: false,
+            authenticationReq: false,
+            authorizationReq: false
         }
     }
-}
+})
+
+
+
 

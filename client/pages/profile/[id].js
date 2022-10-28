@@ -14,6 +14,8 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import Post from "../../components/Post";
 import Link from 'next/link'
 
+import { hof } from "../../utils/hof";
+
 import format from "date-fns/format";
 
 const comment = {
@@ -206,16 +208,6 @@ const Profile = ({setPost, setOpen, ...props}) => {
 
 export default Profile
 
-
-export const getServerSideProps = async () => {
-
-    return {
-        props: {
-            user: {userName: 'yashkundu', name: 'Yashasvi'}
-        }
-    }
-}
-
 const Recommends = ({user, setOpen, setPost}) => {
     return (
         <>
@@ -283,3 +275,13 @@ const Tracks = () => {
         </div>
     )
 }
+
+export const getServerSideProps = hof( async () => {
+    return {
+        props: {
+            sideBars: true,
+            authenticationReq: true,
+            authorizationReq: true
+        }
+    }
+})

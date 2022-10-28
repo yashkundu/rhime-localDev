@@ -8,7 +8,8 @@
     "test": "jest --watchAll --runInBand --forceExit",
     "singletest": "jest --runInBand --forceExit",
     "updateCommon": "npm uninstall @rhime/common && npm install @rhime/common",
-    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery"
+    "updateDiscovery": "npm uninstall @rhime/discovery && npm install @rhime/discovery",
+    "updateEvents": "npm uninstall @rhime/events && npm install @rhime/events"
   },
   "jest": {
     "preset": "ts-jest",
@@ -37,8 +38,9 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@rhime/common": "^1.0.15",
-    "@rhime/discovery": "^1.0.5",
+    "@rhime/common": "^1.0.23",
+    "@rhime/discovery": "^1.0.11",
+    "@rhime/events": "^1.0.14",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.9",
@@ -52,6 +54,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.1",
+    "nats": "^2.8.0",
     "pino-http": "^8.2.0",
     "pino-pretty": "^9.1.0",
     "uuid": "^9.0.0"

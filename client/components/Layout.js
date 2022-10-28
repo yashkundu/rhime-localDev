@@ -23,7 +23,7 @@ const Layout = ({Children, ...props}) => {
 
             <main className="flex min-h-screen">
                 {/* Sidebar */}
-                {props.user && <Sidebar user={props.user}/>}
+                <Sidebar user={props.user}/>
 
                 {/* Feed */}
 
@@ -31,10 +31,7 @@ const Layout = ({Children, ...props}) => {
 
                 {/* Widgets */}
 
-                {props.user && <Widgets
-                newsResults={props.newsResults?.articles}
-                randomUsersResults={props.randomUsersResults?.results || null}
-                />}
+                <Widgets user={props.user} />
 
                 <CommentModal open={open} setOpen={setOpen} post={post}/>
 

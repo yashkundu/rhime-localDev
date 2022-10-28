@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-export default function SidebarMenuItem({ text, Icon, active }) {
+export default function SidebarMenuItem({ text, Icon, active, link }) {
     return (
-      <Link href={`/${text.toLowerCase()}`}>
+      <Link href={link}>
         <div className="hoverEffect flex items-center text-gray-700 justify-center xl:justify-start text-lg space-x-3">
           <Icon className="" 
           sx={{

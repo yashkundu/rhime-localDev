@@ -4,13 +4,15 @@ import {Collection, Document, ObjectId} from 'mongodb'
 export enum UserFields{
     email = 'email',
     userName = 'userName',
-    password = 'password'
+    password = 'password',
+    isAuth = 'isAuth'
 }
 
 export interface user extends Document{
     email: string;
     userName: string;
-    password: string
+    password: string;
+    isAuth: boolean
 }
 
 class UserCollection{

@@ -20,7 +20,7 @@ export default function Header({
             <p className="mt-2 text-center text-sm text-gray-600 mt-5">
             {paragraph} {' '}
             <Link href={linkUrl}>
-                <span className="cursor-pointer font-medium text-stone-900 hover:text-[#e30913]">{linkName}</span>
+                <a><span className="cursor-pointer font-medium text-stone-900 hover:text-[#e30913]">{linkName}</span></a>
             </Link>
             </p>
         </div>

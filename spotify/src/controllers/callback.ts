@@ -35,7 +35,7 @@ export const callback = async (req: Request, res: Response) => {
             }
         )
         const info = await Token.insertOne({
-            _id: new ObjectID(req.user.userId), 
+            _id: new ObjectID(req.userAuth.userId), 
             access_token: data.access_token as string,
             refresh_token: data.refresh_token as string,
             expiration: new Date(Date.now() + (data.expires_in-10)*1000)
@@ -47,14 +47,16 @@ export const callback = async (req: Request, res: Response) => {
         if(!info.acknowledged) throw new Error('Error in inserting the info doc')
 
         await nats.publish(subject(noun.user, verb.authorized), {
-            userId: req.user.userId
+            userId: req.userAuth.userId
         })
 
 
         //push a job to get all the user favourites and find recommends to the 
         // task queue
         const job = await ltTaskQueue.queue.add('initialFetch', {
-            userId: req.user.userId
+            userId: req.userAuth.userId
+        }, {
+            jobId: `initialFetch:${req.userAuth.userId}`
         })
 
         res.cookie('accessToken', null, {

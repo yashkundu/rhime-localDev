@@ -49,22 +49,22 @@ export const createPost = async (req: Request, res: Response) => {
         })),
     }
     if(req.body.listenUrl) track.listenUrl = req.body.listenUrl;
-    if(req.body.images) track.images = req.body.images
+    if(req.body.images) track.images = req.body.images.map((image: string) => image)
 
-    await findAndInsertTrack(track);
+    const trackRes = findAndInsertTrack(track);
 
     const post: postRes = {
         userId: new ObjectId(req.userAuth.userId),
-        userName: req.userAuth.userName,
-        trackId: req.body.trackId,
-        timeStamp: new Date()
+        trackId: req.body.trackId
     }
     if(req.body.caption) post.caption = req.body.caption;
     
-    await Post.insertOne(post)
+    const postRes =  Post.insertOne(post)
+    await Promise.all([trackRes, postRes]);
 
     await nats.publish<PostCreatedEvent>(subject(noun.post, verb.created), {
-        postId: post._id?.toString() as string
+        postId: post._id?.toString() as string,
+        userId: req.userAuth.userId
     })
 
     res.status(StatusCodes.CREATED).send({post: {

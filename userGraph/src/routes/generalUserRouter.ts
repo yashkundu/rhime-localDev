@@ -2,9 +2,7 @@ import express from 'express'
 
 const router = express.Router({mergeParams: true})
 
-import { 
-    authenticated, 
-    paramObjectIdValidator } from '@rhime/common'
+import { paramObjectIdValidator } from '@rhime/common'
 
 import { looselyAuthorized } from '../middlewares/looselyAuthorized'
 
@@ -15,7 +13,7 @@ import {isMessiah, isMinion} from '../controllers/checkRelation'
 import {minionCount} from '../controllers/minionCount'
 import {messiahCount} from '../controllers/messiahCount'
 
-router.use(authenticated, paramObjectIdValidator('userId'))
+router.use(paramObjectIdValidator('userId'))
 
 
 router.post('/toggleUser', looselyAuthorized, toggleUser)

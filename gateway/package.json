@@ -14,9 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rhime/common": "^1.0.23",
-    "@rhime/discovery": "^1.0.11",
-    "@rhime/events": "^1.0.14",
+    "@rhime/common": "^1.0.24",
+    "@rhime/discovery": "^1.0.14",
+    "@rhime/events": "^1.0.19",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.14",
     "@types/http-proxy": "^1.17.9",

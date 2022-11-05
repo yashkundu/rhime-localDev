@@ -7,13 +7,13 @@ import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "bson"; 
 import {mongo} from '../db/mongo'
 
-
+// just absolutely horrible and disgusting, improve the entire service.
 export const toggleUser = async (req: Request, res: Response) => {
     const anotherUserId = new ObjectId(req.params.userId)
     const userProfile = await ValidUser.findOne({_id: anotherUserId})
     if(!userProfile) throw new NotFoundError('User does not exist.')
 
-    const minionId = new ObjectId(req.user.userId)
+    const minionId = new ObjectId(req.userAuth.userId)
     const messiahId = anotherUserId
 
     const session = mongo.client.startSession()

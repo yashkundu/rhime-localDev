@@ -23,7 +23,7 @@ const getTimelinePosts = async (userId: ObjectId, anchorId: string | undefined) 
     if(anchorId) matchObj['_id.postId'] = {$lt: new Long(anchorId)}
     let posts: string[] = []
 
-    const call = UserGraphView.getMessiahs({userId: userId.toHexString()})
+    const call = UserGraphView.service.getMessiahs({userId: userId.toHexString()})
 
     let messiahs: Messiahs;
 
@@ -54,7 +54,9 @@ const getTimelinePosts = async (userId: ObjectId, anchorId: string | undefined) 
     
     
     posts = getTopX(posts.concat(newPosts))
-    return posts;        
+    return posts;  
+    
+          
 }
 
 const getTopX = (posts: string[]) => {

@@ -1,13 +1,9 @@
 import express from 'express'
 const router = express.Router()
 
-import { authenticated } from '@rhime/common'
+import { getUserRecommends } from '../controllers/getUserRecommends'
 import {spotifyAuthorized} from '../middlewares/spotifyAuthorized'
 
-
-
-router.use(authenticated)
-
-
+router.route('/').get(spotifyAuthorized, getUserRecommends)
 
 export {router as recommendRouter}

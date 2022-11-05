@@ -11,7 +11,7 @@ import {itemValidator} from '../middlewares/itemValidator'
 
 router.route('/:itemId')
 .post(paramObjectIdValidator('itemId'), itemValidator,  toggleItemLike)
-.get(paramObjectIdValidator('itemId'), itemValidator, isItemLiked)
+.get(paramObjectIdValidator('itemId'), isItemLiked)
 
 
-export {router as itemReactRouter}
+export {router as itemLikeRouter}

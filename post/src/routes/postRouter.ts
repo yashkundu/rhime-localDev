@@ -2,21 +2,12 @@ import express from 'express'
 
 const router = express.Router()
 
-import { authenticated, paramObjectIdValidator, SchemaValidator} from '@rhime/common'
-import { tightlyAuthorizedPost } from '../middlewares/tightlyAuthorizedPost'
+import { paramObjectIdValidator} from '@rhime/common'
 
-import {createPost, getPost, deletePost} from '../controllers'
-
-router.use(authenticated)
+import {createPost, getPost, getTrack} from '../controllers'
 
 router.route('/').post(createPost)
-
-
-
-router.use('/:postId', paramObjectIdValidator('postId'))
-router.route('/:postId')
-    .get(getPost)
-    .delete(tightlyAuthorizedPost, deletePost)
-
+router.route('/getPost/:postId').get(paramObjectIdValidator('postId'), getPost)
+router.route('/getTrack/:trackId').get(getTrack)
 
 export {router as postRouter}

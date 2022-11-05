@@ -13,6 +13,7 @@ for /d %%f in ("%cur_dir%\*") do (
     if "%%f" == "%cur_dir%\userGraph" set flag=1
     if "%%f" == "%cur_dir%\userGraphView" set flag=1
     if "%%f" == "%cur_dir%\reaction" set flag=1
-    
+    if "%%f" == "%cur_dir%\like" set flag=1
+    if "%%f" == "%cur_dir%\likeCount" set flag=1
     if defined flag start "" cd %%f ^&^& npm run updateDiscovery ^&^& exit
 )

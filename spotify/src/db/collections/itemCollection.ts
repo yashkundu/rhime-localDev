@@ -10,6 +10,7 @@ export enum ItemFields{
     itemType = 'itemType'
 }
 
+// (_id.userId, type, wt) -- index
 
 export interface item extends Document{
     _id: {

@@ -4,6 +4,8 @@ import _ from 'lodash'
 type ItemName = 'tracks' | 'artists';
 type TimeType = 'medium_term' | 'short_term'
 
+import { AxiosError } from 'axios';
+
 
 
 // calculates all the favoured tracks, artists and genres
@@ -104,7 +106,10 @@ const fetchItems = async (userId: string, item: ItemName, timeRange: TimeType) =
         }
 
     } catch(error) {
-        console.log(error);
+        console.log('Axios Error : ', error);
+        
+        console.log((error as AxiosError).code);
+        
     }
     return items;
 }

@@ -21,7 +21,7 @@ const NotFound = ({ ...props }) => {
                 
                 <p>the page you are looking for not avaible!</p>
                 
-                <Link href="/"><a className="link_404">Go to Home</a></Link>
+                <Link href="/"><span className="link_404">Go to Home</span></Link>
             </div>
                 </div>
                 </div>

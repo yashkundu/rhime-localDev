@@ -33,20 +33,26 @@ const checkAccessToken = async () => {
         await refreshAccessToken();
 }
 
-export default function MakeRecommend({user}) {
+export default function MakeRecommend({user, handleCloseModal}) {
 
     
     const [options, setOptions] = useState([])
     const [loading, setLoading] = useState(false)
-    const [value, setValue] = React.useState(null);
+    const [value, setValue] = useState(null);
+    const [caption, setCaption] = useState('')
     const [inputValue, setInputValue] = React.useState('');
-    const router = useRouter()
     
 
 
     const btnClickHandler = (e) => {
         if(!value) return;
-        console.log(value);
+        axios.post('/api/post', {
+            ...value
+        }).then(res => {
+            handleCloseModal();
+            console.log('Success ... ');
+            console.log(res.data);
+        }).catch((e) => console.log(e))
     }
 
     const search = async (txt) => {
@@ -139,6 +145,8 @@ export default function MakeRecommend({user}) {
                   )}
                 renderInput={(params) => (
                     <TextField
+                        onChange={(e) => setCaption(e.target.value)}
+                        value={caption}
                         {...params}
                         label="Search for a song"
                         InputProps={{

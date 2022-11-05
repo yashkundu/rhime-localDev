@@ -25,9 +25,6 @@ export const uploadProfileImage = async (req: Request, res: Response) => {
     }
 }
 
-export const getProfileImage = async (req: Request, res: Response) => {
-    res.sendStatus(StatusCodes.OK)
-}
 
 export const deleteProfileImage = async (req: Request, res: Response) => {
     res.sendStatus(StatusCodes.OK)

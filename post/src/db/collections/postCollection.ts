@@ -5,18 +5,14 @@ import {mongo} from '../mongo'
 
 export enum PostFields{
     userId = 'userId',
-    userName = 'userName',
     caption = 'caption',
-    trackId = 'trackId',
-    timeStamp = 'timeStamp'
+    trackId = 'trackId'
 }
 
 export interface post extends Document{
     userId: ObjectId,
-    userName: string,
     caption?: string,
-    trackId: string,
-    timeStamp: Date,
+    trackId: string
 }
 
 

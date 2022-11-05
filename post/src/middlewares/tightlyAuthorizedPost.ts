@@ -5,7 +5,7 @@ import { NotFoundError, UnauthorizedError } from "@rhime/common";
 
 
 export const tightlyAuthorizedPost = async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user.userId
+    const userId = req.userAuth.userId
     const postId = req.params.postId
 
     const post = await Post.findOne({_id: new ObjectId(postId)})

@@ -1,7 +1,7 @@
 import {mongo} from './db/mongo'
 
 import {nats, subject, noun, verb, LikeToggledEvent} from '@rhime/events'
-import { likeToggledHandler, natsEmitter } from './handlers/likeToggledHandler'
+import { likeToggledHandler, natsEmitter, acknowledge } from './handlers/likeToggledHandler'
 import { consumerOpts, JetStreamPullSubscription } from 'nats'
 import { EVENT_BATCH_SIZE, BATCH_UPDATE_TIME } from './config'
 
@@ -24,35 +24,37 @@ const pullMsgs = (pullConsumer: JetStreamPullSubscription) => {
 const start = async () => {
     try {
 
-        // await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
-        // console.log('Reaction-BatchUpdater service connected to MongoDb ... ');
+        await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
+        console.log('Like-BatchUpdater service connected to MongoDb ... ');
 
         await nats.connect({
             servers: process.env.nats_url
         })
-        console.log('Reaction-BatchUpdater service connected to NATS ... ');
+        console.log('Like-BatchUpdater service connected to NATS ... ');
 
         const js = nats.js
 
 
         const opts = consumerOpts()
-        opts.durable(`${noun.like}-${verb.toggled}-reactionBatchUpdater-consumer`)
+        opts.durable(`${noun.like}-${verb.toggled}-likeBatchUpdater-consumer`)
         opts.ackExplicit()
         opts.manualAck()
         opts.ackWait(1000*10)
 
 
         const pullConsumer = await js.pullSubscribe(subject(noun.like, verb.toggled), opts);
-        console.log(`Reaction BatchUpdater subscribed to ${subject(noun.like, verb.toggled)} subject`);
+        console.log(`Like BatchUpdater subscribed to ${subject(noun.like, verb.toggled)} subject`);
 
         (async () => {
             for await (const msg of pullConsumer) {
                 try {
+                    console.log(Buffer.from(msg.data).toString())
                     likeToggledHandler(
                         JSON.parse(Buffer.from(msg.data).toString()) as LikeToggledEvent, 
                         msg)
                 } catch (error) {
                     console.log(error);
+                    acknowledge(msg);
                 }
             }
         })()

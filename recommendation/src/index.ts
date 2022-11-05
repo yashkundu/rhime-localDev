@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
 import { ltTaskWorker } from "./ltTaskWorker";
 import { stTaskWorker } from './stTaskWorker';
 import { stTaskQueue } from './stTaskQueue';

@@ -5,8 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import {RECOMMEND_BATCH_SIZE} from '../config'
 
 // offset will always be zero. Using it will making updating the code in future
-const getRecommends = async (req: Request, res: Response) => {
-    const userId = new ObjectId(req.user.userId)
+const getUserRecommends = async (req: Request, res: Response) => {
+    const userId = new ObjectId(req.userAuth.userId)
     const offset = (req.query.offset)?(Number(req.query.offset)):0;
 
     const cursor = Recommend.aggregate([
@@ -35,4 +35,4 @@ const getRecommends = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).send({recommends: recommends})
 }
 
-export {getRecommends}
+export {getUserRecommends}

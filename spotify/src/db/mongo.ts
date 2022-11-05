@@ -24,7 +24,6 @@ class MongoWrapper {
         this._client = client
         this._db = client.db('spotifyDB')
     }
-
 }
 
 export const mongo = new MongoWrapper()

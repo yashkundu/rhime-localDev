@@ -4,23 +4,23 @@ import {mongo} from '../mongo'
 import {ObjectId, Int32} from 'bson' 
 
 
-export enum ReactionCountFields{
+export enum RTLikeCountFields{
     itemId = 'itemId',
     count = 'count'
 }
 
 
-export interface reactionCount extends Document{
+export interface rTLikeCount extends Document{
     _id: ObjectId;                      // itemId
     count: Int32
 }
 
 
-class ReactionCountCollection {
-    private _collection!: Collection<reactionCount>;
+class RTLikeCountCollection {
+    private _collection!: Collection<rTLikeCount>;
     get collection(){
         if(!this._collection){
-            this._collection = mongo.db.collection<reactionCount>('RealTimeReactionCount')
+            this._collection = mongo.db.collection<rTLikeCount>('RTLikeCount')
         }
         return this._collection
     }
@@ -33,7 +33,7 @@ declare global{
     }
 }
 
-export const ReactionCount = new Proxy<ReactionCountCollection, reactionCount>(new ReactionCountCollection(), {
+export const RTLikeCount = new Proxy<RTLikeCountCollection, rTLikeCount>(new RTLikeCountCollection(), {
     get(target, prop){
         return target.collection[prop]
     }

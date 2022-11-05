@@ -1,7 +1,7 @@
 import { app } from './app';
 import { Registry, service } from '@rhime/discovery';
-import { watcher } from './controllers/watcher';
-import { initializer } from './controllers/initializer';
+import { watcher } from './discoveryControllers/watcher';
+import { initializer } from './discoveryControllers/initializer';
 
 import {nats, noun} from '@rhime/events'
 
@@ -28,9 +28,10 @@ const initNats = async () => {
     const jsm = await nats.nc.jetstreamManager()
 
     // creating stream corresponding to every noun :)
-    await createStream(noun.user, jsm)
-    await createStream(noun.post, jsm)
-    await createStream(noun.like, jsm)
+    await createStream(noun.user, jsm);
+    await createStream(noun.post, jsm);
+    await createStream(noun.like, jsm);
+    await createStream(noun.comment, jsm);
 }
 
 

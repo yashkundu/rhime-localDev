@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import SidebarMenuItem from "./SidebarMenuItem";
 import {
   EllipsisHorizontalCircleIcon,
@@ -32,8 +32,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '1px solid #000',
-  boxShadow: '2px 4px #000',
+  boxShadow: 24,
   p: 4,
   borderRadius: '25px'
 };
@@ -109,7 +108,7 @@ export default function Sidebar({user}) {
         <SidebarMenuItem link={'/'} text="Home" Icon={HomeIcon} active />
         <SidebarMenuItem link={''} text="Trending" Icon={TrendingUpIcon} />
         <SidebarMenuItem link={''} text="Notifications" Icon={FavoriteBorderIcon} />
-        <SidebarMenuItem link={''} text="Connect" Icon={PeopleAltIcon} />
+        <SidebarMenuItem link={'/connect'} text="Connect" Icon={PeopleAltIcon} />
         <SidebarMenuItem link={''} text="Saved" Icon={BookmarksIcon} />
         <SidebarMenuItem link={`/profile/${user?.userId}`} text="Profile" Icon={SentimentSatisfiedAltIcon} />
       </div>
@@ -142,7 +141,7 @@ export default function Sidebar({user}) {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <MakeRecommend user={user}/>
+              <MakeRecommend user={user} handleCloseModal={handleCloseModal}/>
             </Box>
           </Modal>
 

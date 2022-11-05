@@ -14,7 +14,7 @@ const initNATS = async () => {
     await nats.connect({
         servers: process.env.nats_url
     })
-    console.log('User service connected to NATS ... ');
+    console.log('User Graph service connected to NATS ... ');
 
     await nats.subscribe<UserCreatedEvent>(subject(noun.user, verb.created), {
         durableName: `${noun.user}-${verb.created}-userGraph-consumer`,
@@ -41,7 +41,7 @@ const start = async () => {
         }
 
         await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
-        console.log('User service connected to MongoDb ... ');
+        console.log('User Graph service connected to MongoDb ... ');
 
         await initNATS()
         

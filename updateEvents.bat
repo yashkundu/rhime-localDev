@@ -9,8 +9,9 @@ for /d %%f in ("%cur_dir%\*") do (
     if "%%f" == "%cur_dir%\spotify" set flag=1
     if "%%f" == "%cur_dir%\post" set flag=1
     if "%%f" == "%cur_dir%\comment" set flag=1
-    if "%%f" == "%cur_dir%\reaction" set flag=1
-    if "%%f" == "%cur_dir%\reactionUpdater" set flag=1
-    if "%%f" == "%cur_dir%\reactionBatchUpdater" set flag=1
+    if "%%f" == "%cur_dir%\feed" set flag=1
+    if "%%f" == "%cur_dir%\like" set flag=1
+    if "%%f" == "%cur_dir%\likeUpdater" set flag=1
+    if "%%f" == "%cur_dir%\likeBatchUpdater" set flag=1
     if defined flag start "" cd %%f ^&^& npm run updateEvents ^&^& exit
 )

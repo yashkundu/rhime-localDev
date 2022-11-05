@@ -1,31 +1,39 @@
-import {ObjectId} from 'bson'
 import { CACHE_LIMIT } from '../config'
 import { UserGraphView } from '../services/userGraphView'
 import { ds } from '../ds/redis'
 import { Minions } from '../interfaces/minionsInterface'
 
 
-const fanOutPost = async (ownerId: ObjectId, postId: string) => {
-    const call = UserGraphView.getMinions({userId: ownerId.toHexString()})
+const fanOutPost = async (ownerId: string, postId: string) => {
+    const call = UserGraphView.service.getMinions({userId: ownerId})
 
-    const ownerKey = `user:${ownerId.toHexString()}`
-    await ds.redis.pipeline()
-        .zadd(ownerKey, Number(postId), postId)
+    let promises = []
+
+    const ownerKey = `userFeed:${ownerId}`
+    promises.push(
+        ds.redis.pipeline()
+        .zadd(ownerKey, 1, postId)
         //@ts-ignore
         .reduceToLimit(ownerKey, CACHE_LIMIT)
-        .exec()
+        .exec() 
+    );
+
+    
 
     let minions: Minions;
     while(minions=call.read()){
         const pipeline = ds.redis.pipeline()
         minions.userIds.forEach(async (id:Buffer) => {
-            const userKey = `user:${id.toString('hex')}`
-            pipeline.zadd(userKey, Number(postId),  postId)
+            const userKey = `userFeed:${id.toString('hex')}`
+            // change the number here :(
+            pipeline.zadd(userKey, 0,  postId)
             // @ts-ignore
             pipeline.reduceToLimit(userKey, CACHE_LIMIT)
         })
-        await pipeline.exec()
+        promises.push(pipeline.exec())
     }
+
+    await Promise.all(promises)
 }
 
 

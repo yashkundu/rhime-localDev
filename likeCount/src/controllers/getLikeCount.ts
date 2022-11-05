@@ -9,10 +9,13 @@ import { StatusCodes } from 'http-status-codes'
 const getLikeCount = async (req: Request, res: Response) => {
     const itemId = new ObjectId(req.params.itemId)
 
-    const rTRes = await RTLikeCount.findOne({_id: itemId})
-    const dailyRes = await DailyLikeCount.findOne({_id: itemId})
+    const rTLike = RTLikeCount.findOne({_id: itemId})
+    const dailyLike = DailyLikeCount.findOne({_id: itemId})
+
+    const [rTRes, dailyRes] = await Promise.all([rTLike, dailyLike])
 
     let count = 0;
+    console.log(rTRes);
     if(rTRes) count += Number(rTRes.count.toString());
     if(dailyRes) count += Number(dailyRes.count.toString());
 

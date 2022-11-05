@@ -13,7 +13,8 @@ const scheduleUpdates = async () => {
         repeat: {
             pattern: '* 30 2 * * 1',
             limit: 1
-        }
+        },
+        jobId: 'scheduledFetchJob'
     })
 }
 

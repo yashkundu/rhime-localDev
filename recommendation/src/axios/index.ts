@@ -14,6 +14,7 @@ axios.interceptors.request.use(async (config) => {
     // @ts-ignore
     const userId = new ObjectId(config.headers['Authorization']);
     const token = await Token.findOne({_id: userId})
+    console.log('Token : ', token);
 
     if(!token) throw new Axios.Cancel('Invalid user')
 
@@ -48,6 +49,8 @@ axios.interceptors.request.use(async (config) => {
     config.headers['Authorization'] = `Bearer ${access_token}`
     return config
 }, (error) => {
+    console.log('Error inside spotify inceptor ... ');
+    console.log(error);
     return Promise.reject(error)
 })
 

@@ -13,9 +13,10 @@ class State {
     resetLikes() {
         this.likes = {}
     }
-    updateLike(itemId: string, num: number) {
+    updateLike(itemId: string, type: number) {
         if(this.likes[itemId]===undefined) this.likes[itemId] = 0;
-        this.likes[itemId] += num;
+        if(type===1) this.likes[itemId] += 1;
+        else this.likes[itemId] -= 1;
     }
 }
 

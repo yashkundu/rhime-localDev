@@ -17,7 +17,7 @@ const getPostComments = async (req: Request, res: Response) => {
     if(anchorId) matchObj._id = {$lt: anchorId}
 
 
-    const comments = await Comment.aggregate([
+    const comments = (await Comment.aggregate([
         {
             $match: matchObj
         },
@@ -27,9 +27,14 @@ const getPostComments = async (req: Request, res: Response) => {
         {
             $limit: PAGE_SIZE
         }
-    ]).toArray()
+    ]).toArray()).map(comment => ({
+        commentId: comment._id,
+        userId: comment.userId,
+        text: comment.text,
+        timeStamp: (comment._id as ObjectId).getTimestamp()
+    }))
 
-    res.status(StatusCodes.OK).send(comments)
+    res.status(StatusCodes.OK).send({comments: comments})
 
 }
 

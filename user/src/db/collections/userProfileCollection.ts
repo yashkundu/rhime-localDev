@@ -20,7 +20,7 @@ export interface userProfile extends Document{
     _id: ObjectId;                                  // userId
     userName: string;
     email: string;
-    firstName?: string;
+    firstName: string;
     lastName?: string;
     bio?: string;
     age?: Int32;

@@ -11,7 +11,7 @@ import { pinoOptions } from './config/pinoConfig'
 
 
 
-import { NotFoundMware, ErrorHandler } from '@rhime/common'
+import { NotFoundMware, ErrorHandler, userAuthMware } from '@rhime/common'
 
 
 import { authRouter } from './routes/authRouter'
@@ -22,6 +22,7 @@ const app = express()
 app.use(pino(pinoOptions))
 app.use(cookieParser(process.env.SIGNED_COOKIE_SECRET))
 app.use(express.json())
+app.use(userAuthMware)
 
 
 app.use('/api/auth', authRouter)

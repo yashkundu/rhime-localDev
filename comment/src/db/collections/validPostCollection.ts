@@ -1,13 +1,15 @@
 import { Document, Collection } from "mongodb";
 import {mongo} from '../mongo'
 
+import {ObjectId} from 'bson'
+
 
 export enum ValidPostFields{
     
 }
 
 export interface validPost extends Document{
-    _id: string;            // postId
+    _id: ObjectId;            // postId
 }
 
 

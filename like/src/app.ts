@@ -7,7 +7,7 @@ import 'express-async-errors'
 import pino from 'pino-http'
 import { pinoOptions, ErrorHandler, NotFoundMware, userAuthMware } from '@rhime/common'
 
-import { itemReactRouter } from './routes/itemReactRouter'
+import { itemLikeRouter } from './routes/itemLikeRouter'
 
 const app = express()
 
@@ -15,7 +15,7 @@ app.use(pino(pinoOptions('info', false, false)))
 app.use(express.json())
 app.use(userAuthMware)              // populates req.userAuth
 
-app.use('/api/reaction', itemReactRouter)
+app.use('/api/like', itemLikeRouter)
 
 
 app.use(NotFoundMware)

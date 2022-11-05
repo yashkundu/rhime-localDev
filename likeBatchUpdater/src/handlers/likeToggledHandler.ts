@@ -5,8 +5,7 @@ import { state } from "../state";
 
 const natsEmitter = new EventEmitter()
 
-const likeToggledHandler = async (event: LikeToggledEvent, msg: JsMsg) => {
-    state.updateLike(event.itemId, event.num);
+const acknowledge = (msg: JsMsg) => {
     msg.ack()
     state.counter--;
     if(!state.counter) {
@@ -15,4 +14,9 @@ const likeToggledHandler = async (event: LikeToggledEvent, msg: JsMsg) => {
     }
 }
 
-export {likeToggledHandler, natsEmitter}
+const likeToggledHandler = async (event: LikeToggledEvent, msg: JsMsg) => {
+    state.updateLike(event.itemId, event.type);
+    acknowledge(msg)
+}
+
+export {likeToggledHandler, natsEmitter, acknowledge}

@@ -5,64 +5,117 @@ import {
   Grid,
   IconButton,
   Typography,
-  useTheme,
 } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import Post from "../../components/Post";
+
+import Skeleton from '@mui/material/Skeleton';
+
+import {ProfilePost} from '../../components/ProfilePost'
+
 import Link from 'next/link'
+
+import {DEFAULT_PROFILE_IMAGE} from '../../config'
 
 import { hof } from "../../utils/hof";
 
-import format from "date-fns/format";
+import {useRouter} from 'next/router'
 
-const comment = {
-    user: {
-      userName: 'yashkundu',
-      profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
-    },
-    comment: {
-      text: 'Hey there. How are you doing . This is some random comment :)',
-      timeStamp: '2d',
-      likes: 69
+import chunk from 'lodash/chunk'
+
+import axios from "axios";
+
+const SPOTIFY_BATCH_SIZE=50;
+
+// ---------------------------------------------------------------------
+
+let token = null;
+let expDate = null;
+
+const refreshAccessToken = async () => {
+    try {
+        const res = await axios.get('/api/spotify/getToken')
+        const data = res.data
+        token = data.token
+        expDate = new Date(data.expDate)
+    } catch (error) {
+        console.log(error);
     }
 }
 
-const post = {
-    profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-    image: 'https://media.gettyimages.com/photos/5121988pontiac-michicago-bulls-superstar-michael-jordan-slams-two-of-picture-id515301500',
-    userName: 'yashkundu',
-    likes: 20,
-    createdAt: 'April 8, 2022',
-    description: 'Hey how are you !!!',
-    comments: [comment, comment, comment, comment, comment, comment, comment, comment]
+const checkAccessToken = async () => {
+    if(!token || !expDate || (expDate<new Date(Date.now()))) 
+        await refreshAccessToken();
 }
 
-const user = {
-    name: 'Yashasvi',
-    userName: 'yashKundu',
-    posts: [post, post, post, post, post, post],
-    backgroundImage: 'https://www.trendycovers.com/covers/homer_simpson_facebook_cover_1400350284.jpg',
-    bio: 'Young wild and dumb',
-    createdAt: new Date(Date.now() - 60*60*60*60),
-    profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
-}
-
-const Profile = ({setPost, setOpen, ...props}) => {
-
-    const followingStatus = false
-    const followerStatus = false
+// ---------------------------------------------------------------------
 
 
-    const theme = useTheme();
+const Profile = ({user, ...props}) => {
+
+    const router = useRouter()
+    const {id} = router.query
+
+    const fakePromise = new Promise(resolve => resolve({data: {}}))
+
+    const [profile, setProfile] = useState(null);
+    const [posts, setPosts] = useState(null);
+    const [numMinions, setNumMinions] = useState(0);
+    const [hasFollowed, setHasFollowed] = useState(false)
+
+    let artists = [];
+    let artistIdsLoaded = false;
+    let artistDetailsLoaded = false;
+    const loadedArtistIds = () => {
+        artistIdsLoaded = true;
+    }
+    const loadedArtistDetails = () => {
+        artistDetailsLoaded = true;
+    }
+    
+    let tracks = [];
+    let trackIdsLoaded = false;
+    let trackDetailsLoaded = false;
+    const loadedTrackIds = () => {
+        trackIdsLoaded = true;
+    }
+    const loadedTrackDetails = () => {
+        trackDetailsLoaded = true;
+    }
+
+    useEffect(() => {
+        Promise.all([
+            axios.get(`/api/user/${id}/profile`),
+            axios.get(`/api/userGraph/${id}/minionCount`),
+            axios.get(`/api/userGraph/${id}/messiahCount`),
+            ((user.userId!==id) ? axios.get(`/api/userGraph/${id}/isMinion`) : (fakePromise)),
+            ((user.userId!==id) ? axios.get(`/api/userGraph/${id}/isMessiah`) : (fakePromise)),
+            axios.get(`/api/feed/${id}`)
+        ]).then(([{data: profileObj}, {data: {minionCount}}, {data: {messiahCount}}, {data: {isMinion}}, {data: {isMessiah}}, {data: {posts}}]) => {
+            console.log('Successfull ...');
+            const obj = {...profileObj}
+            obj.fullName = (obj.firstName + ' ' + ((obj.lastName)?(obj.lastName):''));
+            if(!obj.profileImage) obj.profileImage = DEFAULT_PROFILE_IMAGE;
+            obj.minionCount = minionCount
+            obj.messiahCount = messiahCount
+            obj.isMinion = isMinion
+            obj.isMessiah = isMessiah
+            setPosts(posts)
+            setHasFollowed(isMessiah)
+            setNumMinions(minionCount)
+            setProfile(obj)
+        }).catch(err => {
+            console.log('Error ... ');
+            console.log(err);
+            console.log(err.config);
+        })
+    }, [])
+
+    const editClickHandler = () => {
+        
+    }
     
     const [portion, setPortion] = useState(1)
-
-   
-
-    
 
     const handleFollow = async () => {
         
@@ -72,13 +125,7 @@ const Profile = ({setPost, setOpen, ...props}) => {
         
     };
 
-    function hideFollow() {
-        
-    }
 
-    function isFollowVisible() {
-        
-    }
 
     return (
         <div className="h-fit xl:ml-[9%] xl:pl-[230px] lg:ml-[10%] lg:pl-[60px] md:ml-[6%] md:pl-[60px] sm:ml-[6%] sm:pl-[60px] pl-[60px] flex-grow xl:max-w-[850px] lg:max-w-[680px] md:max-w-[640px] sm:max-w-[620px] max-w-[630px] space-y-3">
@@ -92,17 +139,23 @@ const Profile = ({setPost, setOpen, ...props}) => {
                             </IconButton>
                             </Link>
                         </Grid>
-                    
-
-
-                        
                         <Grid item>
-                        <Typography variant="h6">
-                            {user.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: "12px", color: "#555" }}>
-                            {user.posts.length} posts
-                        </Typography>{" "}
+                        {(profile) ? (
+                            <React.Fragment>
+                                <Typography variant="h6">
+                                    {profile.firstName}
+                                </Typography>
+                                <Typography sx={{ fontSize: "12px", color: "#555" }}>
+                                    {2} recommends
+                                </Typography>{" "}
+                            </React.Fragment>
+                        
+                        ) : (
+                            <React.Fragment>
+                                <Skeleton animation="wave" height={17} width={130} />
+                                <Skeleton animation="wave" height={17} width={100} />
+                            </React.Fragment>
+                        )}
                         </Grid>
                     </Grid>
                 </Box>
@@ -110,7 +163,7 @@ const Profile = ({setPost, setOpen, ...props}) => {
                     <Box position="relative">
                         <img
                         width="100%"
-                        src={user.backgroundImage}
+                        src='https://i.ibb.co/wMy9pC3/musical-symbols-wave-white-background-1308-78045.webp'
                         alt="background"
                         />
                     <Box
@@ -122,83 +175,103 @@ const Profile = ({setPost, setOpen, ...props}) => {
                             borderRadius: "50%",
                         }}
                         >
-                        <img width="150px" src={user.profileImage} alt="profile" />
+                            {(profile) ? (
+                                <img width="150px" src={profile.profileImage} alt="PI" />
+                            ) : (
+                                <Skeleton animation="wave" variant="circular" width={150} height={150}/>
+                            )}
+                        
                     </Box>
                 </Box>
                     <Box textAlign="right" padding="10px 20px">
-                        <IconButton>
-                        <MoreHorizIcon />
-                        </IconButton>
-                        <IconButton>
-                        <MessageOutlinedIcon />
-                        </IconButton>
-                        {!hideFollow() && isFollowVisible() && (
-                        <button
-                            className="bg-[#f98b88] hover:bg-[#e30913] px-2 py-1 rounded-[16px]"
-                            onClick={handleFollow}
-                        >
-                            Follow
-                        </button>
-                        )}
-
-                        {!hideFollow() && !isFollowVisible() && (
-                        <button
-                        className="bg-[#a08f8e] hover:bg-[#3e2e30] text-white px-2 py-1 rounded-[16px]"
-                            onClick={handleUnfollow}
-                        >
-                            Unfollow
-                        </button>
-                        )}
+                        {(profile) && (
+                            ((user.userId===id) ? (
+                                <Button onClick={editClickHandler} className="" variant="outlined" startIcon={<EditIcon />}
+                                sx={{
+                                color: "#f98b88",
+                                borderColor: "#f98b88",
+                                padding: "7px 12px",
+                                borderRadius: "20px",
+                                fontSize: "16px",
+                                ':hover': {
+                                    borderColor: "#f98b88",
+                                    fontWeight: 'bold',
+                                    backgroundColor: "#f98b88",
+                                    color: "#FFFFFF"
+                                }
+                                }}
+                            >
+                                Edit
+                            </Button>
+                            ) : (
+                                ((hasFollowed) ?  (
+                                    <button
+                                        className="bg-[#a08f8e] hover:bg-[#3e2e30] text-white px-2 py-1 rounded-[16px]"
+                                            onClick={handleUnfollow}
+                                        >
+                                        Unfollow
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="bg-[#f98b88] hover:bg-[#e30913] px-2 py-1 rounded-[16px]"
+                                        onClick={handleFollow}
+                                    >
+                                        {(profile.isMinion)?'Follow back':'Follow'}
+                                    </button>
+                                ))
+                            ))
+                        )}  
                     </Box>
                     <Box padding="10px 20px">
-                        <Typography variant="h6" sx={{ fontWeight: "500" }}>
-                        {user.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: "14px", color: "#555" }}>
-                        @{user.userName}
-                        </Typography>
-                        <Typography fontSize="16px" color="#333" padding="10px 0">
-                        {user.bio}
-                        </Typography>
-                        <Box
-                        display="flex"
-                        alignItems="center"
-                        padding="6px 0"
-                        flexWrap="wrap"
-                        >
+                        {(profile) ? (
+                            <React.Fragment>
+                                <Typography className="text-[25px]" sx={{ fontWeight: "500" }}>
+                                    {profile.fullName}
+                                </Typography>
+                                <Typography className="text-[20px]" sx={{color: "#555" }}>
+                                    @{profile.userName}
+                                </Typography>
+                                <Typography className="text-[18px]" color="#333" padding="10px 0">
+                                    {(profile.bio) && (profile.bio)}
+                                </Typography>
+                                
+                                <Box display="flex">
+                                <Typography className="text-[18px] mr-4" color="#555" marginRight="1rem">
+                                    <strong className="mr-1" style={{ color: "black" }}>
+                                        {profile.messiahCount}
+                                    </strong>
+                                    Messiahs😇
+                                </Typography>
+                                <Typography className="text-[18px]" color="#555" marginRight="1rem">
+                                    <strong className="mr-1" style={{ color: "black" }}>
+                                        {numMinions}
+                                    </strong>
+                                    Minions🙃
+                                </Typography>
+                                </Box>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <Skeleton className="mt-[40px]" animation="wave" height={17} width="40%" />
+                                <Skeleton animation="wave" height={17} width="20%" />
+                                <Skeleton className="mt-[25px]" animation="wave" height={18} width="70%" />
+                                <Skeleton animation="wave" height={18} width="35%" />
+                            </React.Fragment>
+                        )}
                         
-                        <Box display="flex">
-                            <DateRangeIcon htmlColor="#555" />
-                            <Typography sx={{ ml: "6px", color: "#555" }}>
-                            {"MMM dd yyyy"}
-                            </Typography>
-                        </Box>
-                        </Box>
-                        <Box display="flex">
-                        <Typography color="#555" marginRight="1rem">
-                            <strong style={{ color: "black" }}>
-                            {followingStatus === "success" && followings.length}
-                            </strong>
-                            Following
-                        </Typography>
-                        <Typography color="#555" marginRight="1rem">
-                            <strong style={{ color: "black" }}>
-                            {followerStatus === "success" && followers.length}
-                            </strong>
-                            Followers
-                        </Typography>
-                        </Box>
                     </Box>
-                
-                <div className="text-slate-400 my-4 flex justify-center space-x-8 border-b-2 border-slate-200">
-                    <div onClick={() => setPortion(1)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===1)?"border-solid border-b-4 border-blue-700 text-black":"")}>Recommends</div>
-                    <div onClick={() => setPortion(2)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===2)?"border-solid border-b-4 border-blue-700 text-black":"")}>Artists</div>
-                    <div onClick={() => setPortion(3)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===3)?"border-solid border-b-4 border-blue-700 text-black":"")}>Tracks</div>
-                </div>
-
-                {portion===1 && (<Recommends user={user} setOpen={setOpen} setPost={setPost}/>)}
-                {portion===2 && (<Artists />)}
-                {portion===3 && (<Tracks />)}
+                {(profile) && (
+                    <React.Fragment>
+                        <div className="text-[18px] text-slate-400 my-4 flex justify-center space-x-8 border-b-2 border-slate-200">
+                        <div onClick={() => setPortion(1)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===1)?"border-solid border-b-4 border-[#f98b88] text-black":"")}>Recommends</div>
+                        <div onClick={() => setPortion(2)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===2)?"border-solid border-b-4 border-[#f98b88] text-black":"")}>Artists</div>
+                        <div onClick={() => setPortion(3)} className={"pb-2 cursor-pointer hover:text-black" + ((portion===3)?"border-solid border-b-4 border-[#f98b88] text-black":"")}>Tracks</div>
+                        </div>
+                        {portion===1 && (<Recommends posts={posts} setPosts={setPosts}/>)}
+                        {portion===2 && (<Artists artists={artists} artistIdsLoaded={artistIdsLoaded} loadedArtistIds={loadedArtistIds} artistDetailsLoaded={artistDetailsLoaded} loadedArtistDetails={loadedArtistDetails} userId={user.userId}/>)}
+                        {portion===3 && (<Tracks tracks={tracks} trackIdsLoaded={trackIdsLoaded} loadedTrackIds={loadedTrackIds} trackDetailsLoaded={trackDetailsLoaded} loadedTrackDetails={loadedTrackDetails} userId={user.userId}/>)}
+                    </React.Fragment>
+                )}
                     
                 </Box>
             </Box>
@@ -208,70 +281,221 @@ const Profile = ({setPost, setOpen, ...props}) => {
 
 export default Profile
 
-const Recommends = ({user, setOpen, setPost}) => {
+const Recommends = ({posts, setPosts, ...props}) => {
     return (
-        <>
-            {user.posts &&
-                    user.posts.map((post) => (
-                    <Post key={post._id} post={post} profile={true} setOpen={setOpen} setPost={setPost} />
-                    ))}
-                
-        </>
+        <div className="flex flex justify-center items-center space-y-4">
+            {posts.map((post) => (
+                <ProfilePost key={post} postId={post}/>
+             ))}
+        </div>
     )
 }
 
-const em = {
-    name: 'Eminem',
-    imageUrl: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSusoQHrrN1QD_DMEYP5yYn1bBI-oj7rnnA7WeK7429w1NyCeYV'
-}
+const Artists = ({artists, artistIdsLoaded, loadedArtistIds, artistDetailsLoaded, loadedArtistDetails, userId}) => {
 
-const artists = [em, em, em, em, em, em, em, em, em, em, em, em]
+    const [artistIdsLoadedState, setArtistIdsLoadedState] = useState(artistIdsLoaded);
+    const [artistDetailsLoadedState, setArtistDetailsLoadedState] = useState(artistDetailsLoaded);
 
-const Artists = () => {
+    const loadAllArtists = async () => {
+        for(const arr of chunk(artists, SPOTIFY_BATCH_SIZE)) {
+            const length = arr.length
+            const queryParam = arr.reduce((prev, cur) => (prev+`,${cur.artistId}`), '')
+            await checkAccessToken()
+            const res = await axios.get('https://api.spotify.com/v1/artists', {
+                params: {
+                    ids: queryParam.substring(1)
+                },
+                headers: {
+                    ['Authorization']: `Bearer ${token}`
+                }
+            })
+            for(let i=0;i<length;i++) {
+                arr[i].artistName = res.data.artists[i].name;
+                arr[i].imageUrl = (res.data.artists[i].images[1]?.url || DEFAULT_PROFILE_IMAGE);
+            }
+        }
+    }
+    
+    useEffect(() => {
+        if(!artistIdsLoaded) {
+            axios.get(`/api/spotify/getTopArtists/${userId}`)
+            .then((res) => {
+                console.log('Loaded artistIds');
+                res.data.artists.forEach(artist => artists.push(artist))
+                loadedArtistIds();
+                setArtistIdsLoadedState(true);
+                loadAllArtists().then(() => {
+                    console.log('Loaded artistDetails');
+                    loadedArtistDetails();
+                    setArtistDetailsLoadedState(true);
+                }).catch(error => {
+                    console.log('Error in getting artistDetails');
+                    console.log(error);
+                })
+            }).catch(error => {
+                console.log('Error in getting artistIds');
+                console.log(error)
+            })
+        } else if(!artistDetailsLoaded) {
+            loadAllArtists().then(() => {
+                console.log('Loaded artistDetails');
+                loadedArtistDetails();
+                setArtistDetailsLoadedState(true);
+            }).catch(error => {
+                console.log('Error in getting artistDetails');
+                console.log(error);
+            })
+        }
+    }, [])
+
     return (
-        <div class="p-2">
+        <div className="p-2">
             <div className="pb-6 text-center font-semibold text-[35px]">Top Artists 🎸</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
                 {artists.map(artist => (
-                    <div className="flex p-4">
-                        <div className="mx-auto my-auto">
-                            <div className="">
-                                <img src={artist.imageUrl} alt={artist.name} className="rounded-full h-[145px] w-[145px] hover:bg-slate-200 cursor-pointer"/>
-                            </div>
-                            <div className="text-center">{artist.name}</div>
-                        </div>
-                    </div>
+                    <SingleArtist artist={artist} artistLoaded={artistDetailsLoadedState}/>
                 ))}
             </div>
         </div>
     )
 }
 
-const track = {
-    imageUrl: 'https://i.scdn.co/image/ab67616d0000b273b75a94b6ed1d6c4d51074e54',
-    name: 'Eres tu',
-    info: 'Fifth Harmony - Juntos'
+const SingleArtist = ({artist, artistLoaded}) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    return (
+        <div className="flex p-4">
+            <div className="mx-auto my-auto">
+                <div className="">
+                    {artistLoaded ? (
+                        <>
+                            {(!imageLoaded) && (
+                                <Skeleton variant="circular" width={145} height={145} />
+                            )}
+                            <img onLoad={() => setImageLoaded(true)} src={artist.imageUrl} alt={artist.artistName} className={`rounded-full h-[145px] w-[145px] hover:bg-slate-200 cursor-pointer ${(!imageLoaded)?'hidden':''}`}/>
+                        </>
+                    ) : (
+                        <Skeleton variant="circular" width={145} height={145} />
+                    )} 
+                </div>
+                {artistLoaded ? (
+                    <div className="max-w-[120px] text-center">{artist.artistName}</div>
+                ) : (
+                    <div className="mt-4 flex justify-center"><Skeleton animation="wave" height={15} width={100} /></div>
+                )} 
+                
+            </div>
+        </div>
+    )
 }
 
-const tracks = [track, track, track, track, track, track, track, track]
 
-const Tracks = () => {
+
+const Tracks = ({tracks, trackIdsLoaded, loadedTrackIds, trackDetailsLoaded, loadedTrackDetails, userId}) => {
+
+    const [trackIdsLoadedState, setTrackIdsLoadedState] = useState(trackIdsLoaded);
+    const [trackDetailsLoadedState, setTrackDetailsLoadedState] = useState(trackDetailsLoaded);
+
+    
+    const loadAllTracks = async () => {
+        for(const arr of chunk(tracks, SPOTIFY_BATCH_SIZE)) {
+            const length = arr.length
+            const queryParam = arr.reduce((prev, cur) => (prev+`,${cur.trackId}`), '')
+            await checkAccessToken()
+            const res = await axios.get('https://api.spotify.com/v1/tracks', {
+                params: {
+                    ids: queryParam.substring(1)
+                },
+                headers: {
+                    ['Authorization']: `Bearer ${token}`
+                }
+            })
+            for(let i=0;i<length;i++) {
+                arr[i].trackName = res.data.tracks[i].name;
+                arr[i].listenUrl = (res.data.tracks[i]?.external_urls?.spotify || '');
+                arr[i].imageUrl = (res.data.tracks[i].album.images[1]?.url || DEFAULT_PROFILE_IMAGE);
+                arr[i].artists = res.data.tracks[i].artists.reduce((prev, cur) => (prev + `, ${cur.name}`), '').substring(2)
+            }
+        }
+    }
+    
+    useEffect(() => {
+        if(!trackIdsLoaded) {
+            axios.get(`/api/spotify/getTopTracks/${userId}`)
+            .then((res) => {
+                console.log('Loaded trackIds');
+                res.data.tracks.forEach(track => tracks.push(track))
+                loadedTrackIds();
+                setTrackIdsLoadedState(true);
+                loadAllTracks().then(() => {
+                    console.log('Loaded trackDetails');
+                    loadedTrackDetails();
+                    setTrackDetailsLoadedState(true);
+                }).catch(error => {
+                    console.log('Error in getting trackDetails');
+                    console.log(error);
+                })
+            }).catch(error => {
+                console.log('Error in getting trackIds');
+                console.log(error)
+            })
+        } else if(!trackDetailsLoaded) {
+            loadAllTracks().then(() => {
+                console.log('Loaded trackDetails');
+                loadedTrackDetails();
+                setTrackDetailsLoadedState(true);
+            }).catch(error => {
+                console.log('Error in getting trackDetails');
+                console.log(error);
+            })
+        }
+    }, [])
+
+
     return (
-        <div class="p-2">
+        <div className="p-2">
             <div className="pb-6 text-center font-semibold text-[35px]">Top Tracks 🎶</div>
             <div className="px-4 space-y-6">
                 {tracks.map(track => (
-                    <div className="flex items-center hover:bg-slate-200 cursor-pointer">
-                        <div className="shrink-0 ">
-                            <img src={track.imageUrl} alt={track.name} className="w-[65px] h-[65px]"/>
-                        </div>
-                        <div className="flex-grow px-3">
-                            <div className="font-semibold text-lg">{track.name}</div>
-                            <div className="text-sm">{track.info}</div>
-                        </div>
-                    </div>
+                    <SingleTrack track={track} trackLoaded={trackDetailsLoadedState}/>
                 ))}
             </div>  
+        </div>
+    )
+}
+
+const SingleTrack = ({track, trackLoaded}) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    return (
+        <div onClick={() => window.open(track.listenUrl, "_blank")} className="flex items-center hover:bg-slate-200 cursor-pointer">
+            <div className="shrink-0 ">
+                {trackLoaded ? (
+                    <>
+                        {(!imageLoaded) && (
+                            <Skeleton variant='rectangular' width={65} height={65} />
+                        )}
+                        <img onLoad={() => setImageLoaded(true)} src={track.imageUrl} alt={track.trackName} className={`w-[65px] h-[65px] ${(!imageLoaded)?'hidden':''}`}/>
+                    </>
+                ) : (
+                    <Skeleton variant="rectangular" width={65} height={65} />
+                )} 
+                
+            </div>
+            <div className="flex-grow px-3">
+                {trackLoaded ? (
+                    <>
+                        <div className="font-semibold text-lg">{track.trackName}</div>
+                        <div className="text-sm">{track.artists}</div>
+                    </>
+                ) : (
+                    <>
+                        <Skeleton animation="wave" height={15} width={'65%'} />
+                        <Skeleton animation="wave" height={12} width={'40%'} />
+                    </>
+                )} 
+                
+            </div>
         </div>
     )
 }

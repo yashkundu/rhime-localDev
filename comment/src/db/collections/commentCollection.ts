@@ -6,10 +6,8 @@ import {ObjectId} from 'bson'
 
 export enum CommentFields{
     postId = 'postId',
-    usreName = 'userName',
     userId = 'userId',
-    text = 'text',
-    timeStamp = 'timeStamp'
+    text = 'text'
 }
 
 
@@ -19,9 +17,7 @@ export enum CommentFields{
 export interface comment extends Document{
     postId: ObjectId;
     userId: ObjectId;
-    userName: string,
     text: string;
-    timeStamp: Date
 }
 
 

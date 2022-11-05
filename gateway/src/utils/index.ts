@@ -3,15 +3,15 @@ import { UnauthenticatedError, UnauthorizedError, BadRequestError} from '@rhime/
 
 
 const isAuthenticated = (req: Request) => {
-    if(!req.user) throw new UnauthenticatedError('User not authenticated.')
+    if(!req.userAuth) throw new UnauthenticatedError('User not authenticated.')
 }
 
 const isAuthorized = (req: Request) => {
-    if(!req.user.isAuth) throw new UnauthorizedError('User is not authorized.')
+    if(!req.userAuth.isAuth) throw new UnauthorizedError('User is not authorized.')
 }
 
 const isNotAuthorized = (req: Request) => {
-    if(req.user.isAuth) throw new BadRequestError('User is already authorized.')
+    if(req.userAuth.isAuth) throw new BadRequestError('User is already authorized.')
 }
 
 export {isAuthenticated, isAuthorized, isNotAuthorized}

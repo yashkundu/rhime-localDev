@@ -8,7 +8,7 @@ import { MONGO_BATCH_SIZE } from "../config"
 
 const updateDB = async () => {
     let counter = 0;
-    let builder = mongo.db.collection('RealTimeReactionCount').initializeUnorderedBulkOp()
+    let builder = mongo.db.collection('RTLikeCount').initializeUnorderedBulkOp()
     for(const [itemId, likes] of Object.entries(state.likes)) {
         counter++;
         builder.find({_id: new ObjectId(itemId)}).upsert().updateOne({
@@ -22,6 +22,7 @@ const updateDB = async () => {
     }
     if(counter>0) await builder.execute();
     state.resetLikes()
+    console.log('likeDB updated ... ');
 }
 
 export {updateDB}

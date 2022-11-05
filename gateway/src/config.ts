@@ -57,6 +57,13 @@ const PROXY_ROUTES: ServiceRecord[] = [
         changeOrigin: true
     },
     {
+        serviceName: service.userGraph,
+        endpoint: '/api/userGraph',
+        authentication: true,
+        authorization: true,
+        changeOrigin: true
+    },
+    {
         serviceName: service.user,
         endpoint: '/api/user',
         authentication: true,
@@ -64,8 +71,15 @@ const PROXY_ROUTES: ServiceRecord[] = [
         changeOrigin: true
     },
     {
-        serviceName: service.userGraph,
-        endpoint: '/api/userGraph',
+        serviceName: service.likeCount,
+        endpoint: '/api/likeCount',
+        authentication: true,
+        authorization: true,
+        changeOrigin: true
+    },
+    {
+        serviceName: service.like,
+        endpoint: '/api/like',
         authentication: true,
         authorization: true,
         changeOrigin: true

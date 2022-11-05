@@ -2,6 +2,8 @@ import {Queue} from 'bullmq'
 import {default as Redis, RedisOptions} from 'ioredis'
 import {JobType, DataType, ResultType} from '../interfaces/stQueue'
 
+import {COMPLETED_JOBS_LOG} from '../config'
+
 
 class StTaskQueue {
     private _queue!: Queue<DataType, ResultType, JobType>;
@@ -22,7 +24,12 @@ class StTaskQueue {
             const redis = new Redis(opts)
             redis.on('connect', () => {
                 this._redis = redis
-                this._queue = new Queue<DataType, ResultType, JobType>('stQueue', {connection: redis})
+                this._queue = new Queue<DataType, ResultType, JobType>('stQueue', {
+                    connection: redis,
+                    defaultJobOptions: {
+                        removeOnComplete: COMPLETED_JOBS_LOG
+                    }
+                })
                 resolve()
             })
             redis.on('error', (e) => {

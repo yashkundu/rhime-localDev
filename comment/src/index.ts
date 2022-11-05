@@ -37,10 +37,7 @@ const start = async () => {
         await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
         console.log('Post service connected to MongoDb ... ');
 
-        await nats.connect({
-            servers: process.env.nats_url
-        })
-        console.log('Comment service connected to NATS ... ');
+        await initNATS();
 
         
         app.listen(Number(process.env.APP_PORT), async () => {

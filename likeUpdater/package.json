@@ -19,9 +19,10 @@
   },
   "dependencies": {
     "@rhime/discovery": "^1.0.11",
-    "@rhime/events": "^1.0.14",
+    "@rhime/events": "^1.0.19",
     "@types/node": "^18.7.16",
     "dotenv": "^16.0.2",
+    "ioredis": "^5.2.3",
     "mongodb": "^4.9.1",
     "nats": "^2.8.0"
   }

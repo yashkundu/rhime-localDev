@@ -11,17 +11,17 @@ interface userAuthProp{
 declare global{
     namespace Express{
         interface Request{
-            user: userAuthProp
+            userAuth: userAuthProp
         }
     }
 }
 
 const gatewayAuthenticator = (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.signedCookies?.accessToken
-    if(!accessToken) return
+    if(!accessToken) return next()
     try {
         const payload = validateAccessToken(accessToken) as userAuthProp
-        req.user = payload
+        req.userAuth = payload
         const payloadStr = JSON.stringify({
             userId: payload.userId,
             userName: payload.userName,

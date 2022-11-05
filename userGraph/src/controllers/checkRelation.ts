@@ -9,7 +9,7 @@ import { StatusCodes } from "http-status-codes";
 
 export const isMessiah = async (req: Request, res: Response) => {
     const anotherUserId = new ObjectId(req.params.userId)
-    const userId = new ObjectId(req.user.userId)
+    const userId = new ObjectId(req.userAuth.userId)
 
     const user = await ValidUser.findOne({_id: anotherUserId})
     if(!user) throw new NotFoundError('The user in the url params cannot be found')
@@ -22,7 +22,7 @@ export const isMessiah = async (req: Request, res: Response) => {
 
 export const isMinion = async (req: Request, res: Response) => {
     const anotherUserId = new ObjectId(req.params.userId)
-    const userId = new ObjectId(req.user.userId)
+    const userId = new ObjectId(req.userAuth.userId)
 
     const user = await ValidUser.findOne({_id: anotherUserId})
     if(!user) throw new NotFoundError('The user in the url params cannot be found')

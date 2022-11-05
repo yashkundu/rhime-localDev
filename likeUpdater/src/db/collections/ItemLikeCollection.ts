@@ -4,7 +4,7 @@ import {mongo} from '../mongo'
 import {ObjectId} from 'bson' 
 
 
-export enum ItemReactionFields{
+export enum ItemLikeFields{
     itemId = 'itemId',
     userId = 'userId',
 }
@@ -16,7 +16,7 @@ export enum ItemReactionFields{
 //Atlast check the efficiency of query using explain or split it if somefeatures are to 
 // be upgraded.
 
-export interface itemReaction extends Document{
+export interface itemLike extends Document{
     _id: {
         itemId: ObjectId,
         userId: ObjectId
@@ -24,11 +24,11 @@ export interface itemReaction extends Document{
 }
 
 
-class ItemReactionCollection {
-    private _collection!: Collection<itemReaction>;
+class ItemLikeCollection {
+    private _collection!: Collection<itemLike>;
     get collection(){
         if(!this._collection){
-            this._collection = mongo.db.collection<itemReaction>('itemReaction')
+            this._collection = mongo.db.collection<itemLike>('ItemLike')
         }
         return this._collection
     }
@@ -41,7 +41,7 @@ declare global{
     }
 }
 
-export const ItemReaction = new Proxy<ItemReactionCollection, itemReaction>(new ItemReactionCollection(), {
+export const ItemLike = new Proxy<ItemLikeCollection, itemLike>(new ItemLikeCollection(), {
     get(target, prop){
         return target.collection[prop]
     }

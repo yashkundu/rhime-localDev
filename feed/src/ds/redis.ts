@@ -6,7 +6,7 @@ user:ObjectId ->  A sorted set of k postIds
 */
 
 class RedisWrapper{
-    _redis!: Redis;
+    private _redis!: Redis;
     get redis(){
         if(!this._redis){
             throw new Error('Redis instance is not connected')
@@ -24,6 +24,12 @@ class RedisWrapper{
             })
         })
     }
+
+    // it's important to use sorted set
+    // 2 reasons
+    // 1) to make the push into feed operation idiomatic so that event if multiple events are delivered it doesn't affect the functionality
+    // 2) maybe multiple posts are pushed and it will be a havoc so, ordering is not strictly guaranteed so sorted set is necessary
+
 
     defineCommands(){
         this._redis.defineCommand('reduceToLimit', {

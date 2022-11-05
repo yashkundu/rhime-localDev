@@ -14,7 +14,7 @@ export enum ProfileFeedFields{
 export interface profileFeed extends Document{
     _id: {
         userId: ObjectId;
-        postId: Long
+        postId: ObjectId
     }
 }
 

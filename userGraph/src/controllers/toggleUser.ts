@@ -7,7 +7,10 @@ import { StatusCodes } from "http-status-codes";
 import { ObjectId } from "bson"; 
 import {mongo} from '../db/mongo'
 
-// just absolutely horrible and disgusting, improve the entire service.
+import {nats, subject, noun, verb, UserFeedStaledEvent } from '@rhime/events'
+
+// just absolutely inefficient, improve the entire service.
+// it can hold for small no. of users :)
 export const toggleUser = async (req: Request, res: Response) => {
     const anotherUserId = new ObjectId(req.params.userId)
     const userProfile = await ValidUser.findOne({_id: anotherUserId})
@@ -52,6 +55,11 @@ export const toggleUser = async (req: Request, res: Response) => {
                 isFollowing = false
             }
         })
+
+        await nats.publish<UserFeedStaledEvent>(subject(noun.user, verb.feedStaled), {
+            userId: req.userAuth.userId
+        })
+
     } catch (error) {
         throw new DatabaseError('Error in the database transaction')
     } finally{

@@ -1,5 +1,5 @@
-import {Request, Response, NextFunction} from 'express'
-import {ObjectId, Long} from 'bson'
+import {Request, Response} from 'express'
+import {ObjectId} from 'bson'
 import { StatusCodes } from 'http-status-codes'
 import {getUserPosts} from '../utils'
 

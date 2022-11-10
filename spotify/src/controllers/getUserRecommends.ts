@@ -5,19 +5,16 @@ import { StatusCodes } from "http-status-codes";
 import {RECOMMEND_BATCH_SIZE} from '../config'
 
 // offset will always be zero. Using it will making updating the code in future
+// (_id.userId, isValid, similarity)  -- index
 const getUserRecommends = async (req: Request, res: Response) => {
     const userId = new ObjectId(req.userAuth.userId)
-    const offset = (req.query.offset)?(Number(req.query.offset)):0;
 
     const cursor = Recommend.aggregate([
         {
-            $match: {'_id.userID1': userId, isValid: true}
+            $match: {'_id.userId1': userId, isValid: true}
         },
         {
             $sort: {similarity: -1}
-        },
-        {
-            $skip: offset
         },
         {
             $limit: RECOMMEND_BATCH_SIZE

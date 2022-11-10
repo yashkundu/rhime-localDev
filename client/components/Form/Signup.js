@@ -12,7 +12,7 @@ let fieldsState={};
 
 fields.forEach(field => fieldsState[field.id]='');
 
-export default function Signup(){
+export default function Signup({invokeSuccess, invokeFailure}){
     const [signupState,setSignupState]=useState(fieldsState);
     const router = useRouter()
 
@@ -24,7 +24,13 @@ export default function Signup(){
           email: signupState.email,
           password: signupState.password
       },
-      onSuccess: () => router.push('/auth/signin')
+      onSuccess: () => {
+        invokeSuccess('Successfully signed up')
+        router.push('/auth/signin')
+      },
+      onError: () => {
+        invokeFailure('Error in signing up')
+      }
     })
 
     const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});

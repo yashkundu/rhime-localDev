@@ -16,7 +16,7 @@ const initialFetch: (job: Job<DataType, ResultType, JobType>) => Promise<ResultT
         console.log('Successful :)..........');
         return {success: true}
     } catch (error) {
-        job.moveToFailed('Initital fetch failure')
+        job.moveToFailed((error as Error), 'Initital fetch failure')
         console.log(error);
         throw error
     }

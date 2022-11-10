@@ -35,7 +35,7 @@
   "dependencies": {
     "@rhime/common": "^1.0.24",
     "@rhime/discovery": "^1.0.14",
-    "@rhime/events": "^1.0.19",
+    "@rhime/events": "^1.0.21",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",

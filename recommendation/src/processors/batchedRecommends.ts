@@ -7,6 +7,7 @@ import { createScheduledUserRecommends } from "../utils/scheduledUtils/recommend
 // in-memory anchorId :) do something about when the system restarts --
 import { state } from "../state";
 
+// most heavywt task :(
 
 export const batchedRecommends: (job: Job<DataType, ResultType, JobType>) => Promise<ResultType> = async (job) => {
     try {

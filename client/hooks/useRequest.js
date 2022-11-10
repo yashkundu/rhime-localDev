@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 
-export const useRequest = ({url, method, body, onSuccess}) => {
+export const useRequest = ({url, method, body, onSuccess, onError}) => {
     const [errors, setErrors] = useState(null)
 
     const doRequest = async () => {
@@ -21,6 +21,7 @@ export const useRequest = ({url, method, body, onSuccess}) => {
             console.log('use Request Error -- ', err.response.data)
             setErrors(err.response.data.errors)
             setTimeout(() => setErrors(null), 1000*10)
+            if(onError) onError()
         }
     }
 

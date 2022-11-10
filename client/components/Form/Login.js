@@ -12,7 +12,7 @@ fields.forEach(field=>fieldsState[field.id]='');
 
 import { Alert } from '@mui/material';
 
-export default function Login(){
+export default function Login({invokeSuccess, invokeFailure}){
     const [loginState,setLoginState]=useState(fieldsState);
     const router = useRouter()
 
@@ -23,7 +23,13 @@ export default function Login(){
             userName: loginState.userName,
             password: loginState.password
         },
-        onSuccess: () => router.push('/')
+        onSuccess: () => {
+            invokeSuccess('Successfully signed in')
+            router.push('/')
+        },
+        onError: () => {
+            invokeFailure('Error in sign in')
+        }
       })
 
 

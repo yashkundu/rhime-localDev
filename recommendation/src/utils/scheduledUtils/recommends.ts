@@ -109,19 +109,15 @@ const calculateScheduledRecommends = async (
 }
 
 const addScheduledRecommend = async (userId1: ObjectId, userId2: ObjectId, similarity: number) => {
-    let session = mongo.client.startSession()
         try{
-            await session.withTransaction(async () => {
-                const doc = await Recommend.findOne({'_id.userId1': userId1, '_id.userId2': userId2})
-                if(doc && !doc.isValid) session.abortTransaction()
-                await Recommend.updateOne({'_id.userId1': userId1, '_id.userId2': userId2},
-                    { $set: {similarity: new Double(similarity), isValid: true} },
-                    { upsert: true , session: session}
-                )
-            })
+            await Recommend.updateOne({'_id.userId1': userId1, '_id.userId2': userId2},
+                { 
+                    $set: {similarity: new Double(similarity)},
+                    $setOnInsert: {isValid: true}
+                },
+                { upsert: true}
+            )
         } catch(e) {
             console.log(e)
-        } finally {
-            await session.endSession();
-        }
+        } 
 }

@@ -108,7 +108,7 @@ const fetchItems = async (userId: string, item: ItemName, timeRange: TimeType) =
     } catch(error) {
         console.log('Axios Error : ', error);
         
-        console.log((error as AxiosError).code);
+        // console.log((error as AxiosError).code);
         
     }
     return items;

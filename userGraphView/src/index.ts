@@ -4,7 +4,6 @@ import {mongo} from './db/mongo'
 import path from "path"
 import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
-import { ObjectId } from 'bson'
 import { Minion } from './db/collections/minionCollection'
 import { Messiah } from './db/collections/messiahCollection'
 import { Minions } from './interfaces/minionsInterface'

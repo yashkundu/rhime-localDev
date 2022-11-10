@@ -23,9 +23,22 @@ const getTimelinePosts = async (userId: ObjectId, anchorId: string | undefined) 
     if(anchorId) matchObj['_id.postId'] = {$lt: new Long(anchorId)}
     let posts: string[] = []
 
-    const call = UserGraphView.service.getMessiahs({userId: userId.toHexString()})
+    const call = UserGraphView.getMessiahs({userId: userId.toHexString()})
 
     let messiahs: Messiahs;
+
+    call.on('error', function(err: Error) {
+        console.log('Error in getting messiahs :(');
+        console.log(err);
+    })
+
+    call.on('status', function(status: any) {
+        console.log('Status of getMessiahs : ', status);
+    });
+
+    call.on('end', function() {
+        console.log('getMessiahs stream has ended');
+    });
 
     while(messiahs = call.read()){
         const userIds = messiahs.userIds.map(bufId => new ObjectId(bufId))
@@ -60,7 +73,7 @@ const getTimelinePosts = async (userId: ObjectId, anchorId: string | undefined) 
 }
 
 const getTopX = (posts: string[]) => {
-    return posts.sort((a, b) => (Number(b)-Number(a))).slice(0, PAGE_SIZE)
+    return posts.sort().reverse().slice(0, PAGE_SIZE)
 }
 
 

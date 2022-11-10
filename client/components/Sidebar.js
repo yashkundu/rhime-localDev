@@ -106,14 +106,25 @@ export default function Sidebar({user}) {
 
       <div className="mt-4 mb-2.5">
         <SidebarMenuItem link={'/'} text="Home" Icon={HomeIcon} active />
-        <SidebarMenuItem link={''} text="Trending" Icon={TrendingUpIcon} />
-        <SidebarMenuItem link={''} text="Notifications" Icon={FavoriteBorderIcon} />
+        <SidebarMenuItem disabled link={''} text="Trending" Icon={TrendingUpIcon} />
+        <SidebarMenuItem disabled link={''} text="Notifications" Icon={FavoriteBorderIcon} />
         <SidebarMenuItem link={'/connect'} text="Connect" Icon={PeopleAltIcon} />
-        <SidebarMenuItem link={''} text="Saved" Icon={BookmarksIcon} />
+        <SidebarMenuItem disabled link={''} text="Saved" Icon={BookmarksIcon} />
         <SidebarMenuItem link={`/profile/${user?.userId}`} text="Profile" Icon={SentimentSatisfiedAltIcon} />
+
       </div>
 
       {/* Button */}
+
+
+            <div onClick={handleOpenModal} className="hoverEffect xl:hidden flex items-center text-gray-700 justify-center xl:justify-start text-lg space-x-3">
+              <AudiotrackIcon className="" 
+              sx={{
+                color: "#f98b88",
+                fontSize: 35
+              }}/>
+            </div>
+
 
           <Button onClick={handleOpenModal} className="hidden mt-3 xl:flex" variant="outlined" startIcon={<AudiotrackIcon />}
             sx={{

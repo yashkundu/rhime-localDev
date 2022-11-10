@@ -24,6 +24,9 @@ export const fetchInitialUserFavourites = async (userId: string) => {
         console.log(error);
         throw error
     }
+    finally {
+        await session.endSession();
+    }
     return {trackDict, artistDict, genreDict}
 }
 

@@ -14,9 +14,9 @@ export const fetchScheduledUserFavourites = async (userId: string) => {
     const session = mongo.client.startSession()
     try {
         await session.withTransaction(async () => {
-            const tracksResult = await persistScheduledTracks(userId, session, trackDict)
-            const artistsResult = await persistScheduledArtists(userId, session, artistDict)
-            const genresResult = await persistScheduledGenres(userId, session, genreDict)
+            await persistScheduledTracks(userId, session, trackDict)
+            await persistScheduledArtists(userId, session, artistDict)
+            await persistScheduledGenres(userId, session, genreDict)
         })
     } catch (error) {
         throw error

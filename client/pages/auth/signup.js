@@ -16,7 +16,7 @@ const Signup = ({...props}) => {
               linkName="Login"
               linkUrl="/auth/signin"
             />
-            <SignupComponent.default/>
+            <SignupComponent.default {...props}/>
             </div>
         </div>
     )

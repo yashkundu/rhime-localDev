@@ -12,7 +12,7 @@ const fanOutPost = async (ownerId: string, postId: string) => {
     const ownerKey = `userFeed:${ownerId}`
     promises.push(
         ds.redis.pipeline()
-        .zadd(ownerKey, 1, postId)
+        .zadd(ownerKey, 0, postId)
         //@ts-ignore
         .reduceToLimit(ownerKey, CACHE_LIMIT)
         .exec() 
@@ -25,7 +25,6 @@ const fanOutPost = async (ownerId: string, postId: string) => {
         const pipeline = ds.redis.pipeline()
         minions.userIds.forEach(async (id:Buffer) => {
             const userKey = `userFeed:${id.toString('hex')}`
-            // change the number here :(
             pipeline.zadd(userKey, 0,  postId)
             // @ts-ignore
             pipeline.reduceToLimit(userKey, CACHE_LIMIT)

@@ -2,14 +2,13 @@ import {app} from './app'
 import {mongo} from './db/mongo'
 import { ds } from './ds/redis'
 
-import { watcher } from './discoveryControllers/watcher';
-import { initializer } from './discoveryControllers/initializer';
 
-import {nats, PostCreatedEvent, subject, noun, verb} from '@rhime/events'
+import {nats, PostCreatedEvent, UserFeedStaledEvent, subject, noun, verb} from '@rhime/events'
 
 import { Registry, service } from '@rhime/discovery'
 
 import { postCreatedHandler } from './handlers/postCreatedHandler'
+import { userFeedStaledHandler } from './handlers/userFeedStaledHandler'
 
 const initNATS = async () => {
     await nats.connect({
@@ -22,6 +21,14 @@ const initNATS = async () => {
         deliverySubject: `${noun.post}-${verb.created}-feed-subject`,
         deliveryGroup: `${noun.post}-${verb.created}-feed-group`
     }, postCreatedHandler)
+
+
+    await nats.subscribe<UserFeedStaledEvent>(subject(noun.user, verb.feedStaled), {
+        durableName: `${noun.user}-${verb.feedStaled}-feed-consumer`,
+        deliverySubject: `${noun.user}-${verb.feedStaled}-feed-subject`,
+        deliveryGroup: `${noun.user}-${verb.feedStaled}-feed-group`
+    }, userFeedStaledHandler)
+
 }
 
 const getEtcdWatcher = async (registry: Registry) => {
@@ -47,10 +54,10 @@ const start = async () => {
         }
 
         await mongo.connect('mongodb://127.0.0.1:27017/?directConnection=true')
-        console.log('User service connected to MongoDb ... ');
+        console.log('Feed service connected to MongoDb ... ');
 
         await ds.connect({host: '127.0.0.1', port: 6379})
-        console.log('User service connected to Redis instance ... ');
+        console.log('Feed service connected to Redis instance ... ');
 
         ds.defineCommands()
 
@@ -66,13 +73,6 @@ const start = async () => {
             await registry.register(service.feed, {
                 url: process.env.APP_URL as string
             }, {ttl: Number(process.env.ETCD_KEY_TTL)})
-
-            await initializer(registry)
-        
-            let etcdWatcher = await getEtcdWatcher(registry)
-            while(!etcdWatcher) etcdWatcher = await getEtcdWatcher(registry)
-        
-            watcher(etcdWatcher)
 
         })
         

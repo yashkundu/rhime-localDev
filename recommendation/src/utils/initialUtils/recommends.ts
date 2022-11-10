@@ -65,6 +65,8 @@ const calculateInitialRecommends = async (
         console.log(`[total0, total1, total2] - [${total0}, ${total1}, ${total2}]`);
         console.log(`[min0, min1, min2] - [${min0}, ${min1}, ${min2}]`);
 
+        // WEIGHTED JACCARD INDEX
+
         const s0 = min0/(sum0 + total0 - min0)
         const s1 = min1/(sum1 + total1 - min1)
         const s2 = min2/(sum2 + total2 - min2)

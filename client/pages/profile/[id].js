@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { ThreeDots  } from 'react-loader-spinner'
+
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+
 import { Box } from "@mui/system";
 import {
   Button,
@@ -8,7 +13,7 @@ import {
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import Snackbar from '@mui/material/Snackbar';
 import Skeleton from '@mui/material/Skeleton';
 
 import {ProfilePost} from '../../components/ProfilePost'
@@ -51,7 +56,7 @@ const checkAccessToken = async () => {
 // ---------------------------------------------------------------------
 
 
-const Profile = ({user, ...props}) => {
+const Profile = ({user, invokeSuccess, invokeFailure, ...props}) => {
 
     const router = useRouter()
     const {id} = router.query
@@ -62,6 +67,7 @@ const Profile = ({user, ...props}) => {
     const [posts, setPosts] = useState(null);
     const [numMinions, setNumMinions] = useState(0);
     const [hasFollowed, setHasFollowed] = useState(false)
+    const [followLoading, setFollowLoading] = useState(false)
 
     let artists = [];
     let artistIdsLoaded = false;
@@ -117,14 +123,24 @@ const Profile = ({user, ...props}) => {
     
     const [portion, setPortion] = useState(1)
 
-    const handleFollow = async () => {
-        
-    };
+    const toggleFollow = () => (new Promise((resolve, reject) => {
+        axios.post(`/api/userGraph/${id}/toggleUser`)
+        .then(res => resolve(res.data))
+        .catch(err => reject(err))
+    }))
 
-    const handleUnfollow = async () => {
-        
-    };
-
+    const onClickHandler = () => {
+        setFollowLoading(true)
+        toggleFollow()
+        .then(({isFollowing}) => {
+            setHasFollowed(isFollowing)
+            setNumMinions(prev => (prev + ((isFollowing)?1:-1)))
+            invokeSuccess('Success')
+        }).catch(err => {
+            console.log(err)
+            invokeFailure('Error')
+        }).finally(() => setFollowLoading(false))
+    } 
 
 
     return (
@@ -205,19 +221,69 @@ const Profile = ({user, ...props}) => {
                             </Button>
                             ) : (
                                 ((hasFollowed) ?  (
-                                    <button
-                                        className="bg-[#a08f8e] hover:bg-[#3e2e30] text-white px-2 py-1 rounded-[16px]"
-                                            onClick={handleUnfollow}
+
+                                    <Button onClick={onClickHandler} disabled={(followLoading)} className="" variant="outlined" startIcon={(followLoading)?(<></>):(<PersonRemoveIcon />)}
+                                        sx={{
+                                        color: "#6f6e70",
+                                        borderColor: "#6f6e70",
+                                        padding: (!(followLoading)?("7px 12px"):("7px 53px")),
+                                        borderRadius: "20px",
+                                        fontSize: "17px",
+                                        ':hover': {
+                                            borderColor: "#6f6e70",
+                                            fontWeight: 'bold',
+                                            backgroundColor: "#6f6e70",
+                                            color: "#FFFFFF"
+                                        }
+                                        }}
                                         >
-                                        Unfollow
-                                    </button>
+                                        {(followLoading) ? (
+                                            <ThreeDots 
+                                            height="30"
+                                            width="30"
+                                            color="#6f6e70"
+                                            ariaLabel="tail-spin-loading"
+                                            wrapperStyle={{}}
+                                            wrapperClass=""
+                                            visible={true}
+                                        />
+                                        ) : (
+                                            'Unfollow'
+                                        )}
+                                    </Button>
                                 ) : (
-                                    <button
-                                        className="bg-[#f98b88] hover:bg-[#e30913] px-2 py-1 rounded-[16px]"
-                                        onClick={handleFollow}
-                                    >
-                                        {(profile.isMinion)?'Follow back':'Follow'}
-                                    </button>
+                                    
+                                    <Button onClick={onClickHandler} disabled={(followLoading)} className="" variant="outlined" startIcon={(followLoading)?(<></>):(<PersonAddIcon />)}
+                                        sx={{
+                                        color: "#f98b88",
+                                        borderColor: "#f98b88",
+                                        padding: (!(followLoading)?("7px 12px"):("7px 41px")),
+                                        borderRadius: "20px",
+                                        fontSize: "17px",
+                                        ':hover': {
+                                            borderColor: "#f98b88",
+                                            fontWeight: 'bold',
+                                            backgroundColor: "#f98b88",
+                                            color: "#FFFFFF"
+                                        }
+                                        }}
+                                        >
+                                    {(followLoading) ? (
+                                        <ThreeDots 
+                                        height="30"
+                                        width="30"
+                                        color="#f98b88"
+                                        ariaLabel="tail-spin-loading"
+                                        wrapperStyle={{}}
+                                        wrapperClass=""
+                                        visible={true}
+                                      />
+                                    ) : (
+                                        (profile.isMinion)?'Follow back':'Follow'
+                                    )}
+                                    
+                                </Button>
+                                    
                                 ))
                             ))
                         )}  

@@ -10,7 +10,6 @@ import { pinoOptions, ErrorHandler, NotFoundMware, userAuthMware } from '@rhime/
 
 
 import { spotifyAuthRouter } from './routes/spotifyAuthRouter'
-import { recommendRouter } from './routes/recommendRouter'
 
 
 const app = express()
@@ -20,7 +19,6 @@ app.use(cookieParser(process.env.SIGNED_COOKIE_SECRET))
 app.use(express.json())
 app.use(userAuthMware)
 
-app.use('/api/spotify/recommendation', recommendRouter)
 app.use('/api/spotify', spotifyAuthRouter)
 
 app.use(NotFoundMware)

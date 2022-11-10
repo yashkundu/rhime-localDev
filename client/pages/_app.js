@@ -9,6 +9,8 @@ import createEmotionCache from '../src/createEmotionCache';
 
 import Layout from '../components/Layout';
 
+import Snack from '../hoc/Snack';
+
 import "../styles/globals.css";
 import "../styles/connect.css";
 import "../styles/notFound.css";
@@ -34,12 +36,19 @@ export default function MyApp(props) {
 				build upon. */}
 				<CssBaseline />
 
-				{	(pageProps.sideBars) ? (
-					<Layout {...pageProps} Children={Component} />
-				): (
-					<Component {...pageProps} />
-				)}
-			
+
+					{	(pageProps.sideBars) ? (
+						<Snack Layout={Layout} Children={Component} {...pageProps}/>
+						// <Snack>
+						// 	<Layout {...pageProps} Children={Component} obj={obj.yup}/>
+						// </Snack>
+					): (
+						<Snack Children={Component} {...pageProps}/>
+						// <Snack>
+						// 	<Component {...pageProps} />
+						// </Snack>
+					)}
+
 			
 			</ThemeProvider>
 		</CacheProvider>

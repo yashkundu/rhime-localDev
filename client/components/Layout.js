@@ -16,7 +16,7 @@ const Layout = ({Children, ...props}) => {
 
             <main className="flex min-h-screen">
                 {/* Sidebar */}
-                <Sidebar user={props.user}/>
+                <Sidebar {...props}/>
 
                 {/* Feed */}
 
@@ -24,7 +24,7 @@ const Layout = ({Children, ...props}) => {
 
                 {/* Widgets */}
 
-                <Widgets user={props.user} />
+                <Widgets {...props} />
 
                 
 

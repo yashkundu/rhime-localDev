@@ -2,4 +2,6 @@ node_modules/
 common/
 discovery/
 events/
+
+# Secret file
 .env
